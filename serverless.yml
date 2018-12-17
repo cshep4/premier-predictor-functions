@@ -1,0 +1,82 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+# Serverless.yml is the configuration the CLI
+# uses to deploy your code to your provider of choice
+
+# The `service` block is the name of the service
+service: premier-predictor
+
+plugins:
+  # - serverless-local-schedule
+custom:
+  secrets: ${file(secrets.json)}
+
+# The `provider` block defines where your service will be deployed
+provider:
+  name: aws
+  profile: personal
+  region: us-east-1
+  environment:
+    DATABASE_URL: ${self:custom.secrets.dbUrl}
+    DATABASE_USERNAME: ${self:custom.secrets.dbUser}
+    DATABASE_PASSWORD: ${self:custom.secrets.dbPassword}
+    DYNAMO_DB_ENDPOINT: ${self:custom.secrets.dynamoDbEndpoint}
+    DYNAMO_DB_ACCESS_KEY: ${self:custom.secrets.dynamoDbAccessKey}
+    DYNAMO_DB_SECRET_KEY: ${self:custom.secrets.dynamoDbSecretKey}
+    REDIS_HOST: ${self:custom.secrets.redisHost}
+    REDIS_PORT: ${self:custom.secrets.redisPort}
+    REDIS_PASSWORD: ${self:custom.secrets.redisPassword}
+    FUNCTION_NAME: matchUpdate
+    API_KEY: ${self:custom.secrets.apiKey}
+    API_URL: ${self:custom.secrets.apiUrl}
+    API_COMMENTARY_URL: ${self:custom.secrets.apiCommentaryUrl}
+    SEND_GRID_API_KEY: ${self:custom.secrets.sendgridApiKey}
+
+package:
+ exclude:
+   - common/**
+   - match-update/**
+   - live-match-check/**
+   - score-update/**
+   - get-live-matches/**
+ include:
+   - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
+   - live-match-check/bin/**
+   - score-update/bin/**
+   - get-live-matches/bin/**
+
+functions:
+  fixture-update:
+    runtime: nodejs8.10
+    handler: fixture-update/index.handler
+    events:
+      - schedule: cron(0 3 ? * * *)
+  match-update:
+    runtime: java8
+    memorySize: 1592
+    timeout: 60
+    handler: com.cshep4.premierpredictor.matchupdate.handler.aws.MatchUpdateHandler
+    package:
+      artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
+    events:
+      - schedule: rate(1 minute)
+  live-match-check:
+    runtime: go1.x
+    handler: live-match-check/bin/main
+    events:
+      - schedule: rate(5 minutes)
+  score-update:
+    runtime: go1.x
+    handler: score-update/bin/main
+    events:
+      - schedule: cron(15 22 ? * * *)
+  get-live-matches:
+    runtime: go1.x
+    handler: get-live-matches/bin/main
+    events:
+      - http:
+          path: live
+          resp: http
+          method: get
+          cors: true

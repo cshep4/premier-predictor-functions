@@ -55,7 +55,7 @@ func (m MatchFacts) IsAboutToStart() bool {
 	str := m.FormattedDate + "T" + m.Time
 
 	kickOffTime, _ := time.Parse(layout, str)
-	tenMinutesTime := time.Now().UTC().Add(time.Minute * time.Duration(10))
+	tenMinutesTime := time.Now().UTC().Add(time.Minute * time.Duration(30))
 
 	return m.Status != "FT" && (kickOffTime.Equal(tenMinutesTime) || kickOffTime.Before(tenMinutesTime))
 }

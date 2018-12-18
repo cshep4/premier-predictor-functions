@@ -27,7 +27,6 @@ provider:
     REDIS_HOST: ${self:custom.secrets.redisHost}
     REDIS_PORT: ${self:custom.secrets.redisPort}
     REDIS_PASSWORD: ${self:custom.secrets.redisPassword}
-    FUNCTION_NAME: matchUpdate
     API_KEY: ${self:custom.secrets.apiKey}
     API_URL: ${self:custom.secrets.apiUrl}
     API_COMMENTARY_URL: ${self:custom.secrets.apiCommentaryUrl}
@@ -37,11 +36,13 @@ package:
  exclude:
    - common/**
    - match-update/**
+   - match-data-refresh/**
    - live-match-check/**
    - score-update/**
    - get-live-matches/**
  include:
    - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
+   - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
    - live-match-check/bin/**
    - score-update/bin/**
    - get-live-matches/bin/**
@@ -57,10 +58,23 @@ functions:
     memorySize: 1592
     timeout: 60
     handler: com.cshep4.premierpredictor.matchupdate.handler.aws.MatchUpdateHandler
+    environment:
+      FUNCTION_NAME: matchUpdate
     package:
       artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
     events:
       - schedule: rate(1 minute)
+  match-data-refresh:
+    runtime: java8
+    memorySize: 1024
+    timeout: 60
+    handler: com.cshep4.premierpredictor.matchdatarefresh.handler.aws.MatchDataRefreshHandler
+    environment:
+      FUNCTION_NAME: matchDataRefresh
+    package:
+      artifact: match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
+    events:
+      - schedule: cron(0 3 ? * * *)
   live-match-check:
     runtime: go1.x
     handler: live-match-check/bin/main

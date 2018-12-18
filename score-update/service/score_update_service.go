@@ -3,6 +3,7 @@ package service
 import (
 	. "github.com/ahl5esoft/golang-underscore"
 	_ "github.com/go-sql-driver/mysql"
+	"log"
 	. "premier-predictor-functions/common/api"
 	interfaces2 "premier-predictor-functions/common/api/interfaces"
 	. "premier-predictor-functions/common/domain"
@@ -43,6 +44,7 @@ func (s ScoreUpdateService) UpdateUserScores() error {
 	defer s.redis.Close()
 
 	if isToday(s.redis.GetScoresUpdated()) {
+		log.Println(ErrScoresAlreadyUpdated.Error())
 		s.emailer.Send(getEmailArgs(ErrScoresAlreadyUpdated.Error()))
 		return ErrScoresAlreadyUpdated
 	}
@@ -50,25 +52,30 @@ func (s ScoreUpdateService) UpdateUserScores() error {
 	matches, err := s.api.GetTodaysMatches()
 
 	if err != nil {
+		log.Println(ErrUpdatingScores.Error())
 		s.emailer.Send(getEmailArgs(ErrUpdatingScores.Error()))
 		return ErrUpdatingScores
 	}
 
 	if Any(matches, isTodayAndNotFinished) || All(matches, isNotToday) {
+		log.Println(ErrScoresDoNotNeedUpdating.Error())
 		s.emailer.Send(getEmailArgs(ErrScoresDoNotNeedUpdating.Error()))
 		return ErrScoresDoNotNeedUpdating
 	}
 
+	log.Println(UPDATING_SCORES + " - START")
 	e := s.emailer.Send(getEmailArgs(UPDATING_SCORES + " - START"))
 	util.CheckErr(e)
 
 	_, updateErr := s.http.Put(SCORE_UPDATE_URL, nil)
 
 	if updateErr != nil {
+		log.Println(ErrUpdatingScores.Error())
 		s.emailer.Send(getEmailArgs(ErrUpdatingScores.Error()))
 		return ErrUpdatingScores
 	}
 
+	log.Println(UPDATING_SCORES + " - END")
 	e = s.emailer.Send(getEmailArgs(UPDATING_SCORES + " - END"))
 	util.CheckErr(e)
 

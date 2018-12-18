@@ -27,7 +27,7 @@ func (e Emailer) Send(args *EmailArgs) error {
 
 	message := mail.NewSingleEmail(from, subject, to, plainTextContent, htmlContent)
 
-	client := sendgrid.NewSendClient(os.Getenv("SENDGRID_API_KEY"))
+	client := sendgrid.NewSendClient(os.Getenv("SEND_GRID_API_KEY"))
 	response, err := client.Send(message)
 
 	if err != nil {

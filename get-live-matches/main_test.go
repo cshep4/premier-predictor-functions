@@ -3,7 +3,9 @@ package main
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"log"
 	. "premier-predictor-functions/common/domain"
+	"premier-predictor-functions/get-live-matches/factory"
 	. "premier-predictor-functions/get-live-matches/factory/mock"
 	"testing"
 )
@@ -33,5 +35,11 @@ func TestResponseIsNotFoundWhenThereAreNoLiveMatchesPlaying(t *testing.T) {
 }
 
 func TestIntegration(t *testing.T) {
-	main()
+	liveMatchServiceFactory = factory.LiveMatchServiceFactory{}
+
+	resp, err := Handler()
+
+	log.Println(resp)
+
+	assert.Equal(t, err, nil)
 }

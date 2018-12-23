@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	"os"
 	. "premier-predictor-functions/score-update/constant"
 	"premier-predictor-functions/score-update/factory"
 	. "premier-predictor-functions/score-update/factory/mock"

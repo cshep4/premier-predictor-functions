@@ -21,7 +21,7 @@ provider:
     API_URL: ${self:custom.secrets.apiUrl}
     API_COMMENTARY_URL: ${self:custom.secrets.apiCommentaryUrl}
     SEND_GRID_API_KEY: ${self:custom.secrets.sendgridApiKey}
-    PHONE_NUMBER: ${self:custom.secrets.sendgridApiKey}
+    PHONE_NUMBER: ${self:custom.secrets.phoneNumber}
 
 package:
  exclude:
@@ -74,6 +74,7 @@ functions:
       - schedule: rate(5 minutes)
   score-update:
     runtime: go1.x
+    timeout: 60
     handler: score-update/bin/main
     events:
       - schedule: cron(15 22 ? * * *)

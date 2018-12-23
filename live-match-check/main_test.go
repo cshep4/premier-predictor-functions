@@ -26,7 +26,7 @@ func TestResponseIsInternalServerErrorWhenLiveMatchesAreNotRetrievedSuccessfully
 	assert.Equal(t, err, nil)
 }
 
-func TestIntegrationResponseIsOk(t *testing.T) {
+func TestIntegration(t *testing.T) {
 	liveMatchCheckServiceFactory = factory.LiveMatchCheckServiceFactory{}
 
 	resp, err := Handler()

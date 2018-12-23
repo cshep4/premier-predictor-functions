@@ -4,6 +4,7 @@ import (
 	. "github.com/ahl5esoft/golang-underscore"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
+	"os"
 	. "premier-predictor-functions/common/api"
 	interfaces2 "premier-predictor-functions/common/api/interfaces"
 	. "premier-predictor-functions/common/domain"
@@ -13,6 +14,8 @@ import (
 	interfaces4 "premier-predictor-functions/common/http/interfaces"
 	. "premier-predictor-functions/common/redis"
 	"premier-predictor-functions/common/redis/interfaces"
+	. "premier-predictor-functions/common/sms"
+	interfaces5 "premier-predictor-functions/common/sms/interfaces"
 	"premier-predictor-functions/common/util"
 	. "premier-predictor-functions/score-update/constant"
 	"time"
@@ -23,6 +26,7 @@ type ScoreUpdateService struct {
 	api     interfaces2.ApiRequester
 	emailer interfaces3.Emailer
 	http    interfaces4.HttpWrapper
+	sms     interfaces5.SmsSender
 }
 
 func InjectScoreUpdateService() ScoreUpdateService {
@@ -31,6 +35,7 @@ func InjectScoreUpdateService() ScoreUpdateService {
 		api:     InjectApiRequester(),
 		emailer: InjectEmailer(),
 		http:    InjectHttpWrapper(),
+		sms:     InjectSender(),
 	}
 }
 
@@ -43,28 +48,34 @@ const UPDATING_SCORES = "Updating user scores"
 func (s ScoreUpdateService) UpdateUserScores() error {
 	defer s.redis.Close()
 
+	phoneNumber := os.Getenv("PHONE_NUMBER")
+
 	if isToday(s.redis.GetScoresUpdated()) {
 		log.Println(ErrScoresAlreadyUpdated.Error())
 		s.emailer.Send(getEmailArgs(ErrScoresAlreadyUpdated.Error()))
+		s.sms.Send(ErrScoresAlreadyUpdated.Error(), phoneNumber)
 		return ErrScoresAlreadyUpdated
 	}
 
 	matches, err := s.api.GetTodaysMatches()
 
 	if err != nil {
-		log.Println(ErrUpdatingScores.Error())
-		s.emailer.Send(getEmailArgs(ErrUpdatingScores.Error()))
-		return ErrUpdatingScores
+		log.Println(err.Error())
+		s.emailer.Send(getEmailArgs(err.Error()))
+		s.sms.Send(err.Error(), phoneNumber)
+		return err
 	}
 
 	if Any(matches, isTodayAndNotFinished) || All(matches, isNotToday) {
 		log.Println(ErrScoresDoNotNeedUpdating.Error())
 		s.emailer.Send(getEmailArgs(ErrScoresDoNotNeedUpdating.Error()))
+		s.sms.Send(ErrScoresDoNotNeedUpdating.Error(), phoneNumber)
 		return ErrScoresDoNotNeedUpdating
 	}
 
 	log.Println(UPDATING_SCORES + " - START")
 	e := s.emailer.Send(getEmailArgs(UPDATING_SCORES + " - START"))
+	s.sms.Send(UPDATING_SCORES + " - START", phoneNumber)
 	util.CheckErr(e)
 
 	_, updateErr := s.http.Put(SCORE_UPDATE_URL, nil)
@@ -72,11 +83,13 @@ func (s ScoreUpdateService) UpdateUserScores() error {
 	if updateErr != nil {
 		log.Println(ErrUpdatingScores.Error())
 		s.emailer.Send(getEmailArgs(ErrUpdatingScores.Error()))
+		s.sms.Send(ErrUpdatingScores.Error(), phoneNumber)
 		return ErrUpdatingScores
 	}
 
 	log.Println(UPDATING_SCORES + " - END")
 	e = s.emailer.Send(getEmailArgs(UPDATING_SCORES + " - END"))
+	s.sms.Send(UPDATING_SCORES + " - END", phoneNumber)
 	util.CheckErr(e)
 
 	return s.redis.SetScoresUpdated()

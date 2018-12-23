@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
+	"os"
 	. "premier-predictor-functions/score-update/constant"
 	"premier-predictor-functions/score-update/factory"
 	. "premier-predictor-functions/score-update/factory/mock"
@@ -37,7 +38,7 @@ func TestResponseIsInternalServerErrorWhenScoresAreNotUpdatedSuccessfully(t *tes
 	assert.Equal(t, err, nil)
 }
 
-func TestIntegrationResponseIsOk(t *testing.T) {
+func TestIntegration(t *testing.T) {
 	scoreUpdateServiceFactory = factory.ScoreUpdateServiceFactory{}
 
 	resp, err := Handler()

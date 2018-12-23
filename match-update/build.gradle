@@ -111,6 +111,7 @@ dependencies {
 	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.1'
 	compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.251'
 	compile group: 'com.github.spring-data-dynamodb', name: 'spring-data-dynamodb', version: '5.0.2'
+	compile group: 'com.amazonaws', name: 'aws-java-sdk-sns'
 
 	runtime('mysql:mysql-connector-java')
 

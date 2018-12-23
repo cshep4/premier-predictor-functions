@@ -1,10 +1,10 @@
 package com.cshep4.premierpredictor.matchupdate.service
 
-import com.cshep4.premierpredictor.matchupdate.component.email.EmailDecorator
 import com.cshep4.premierpredictor.matchupdate.component.livematch.LiveMatchDataHandler
 import com.cshep4.premierpredictor.matchupdate.component.livematch.LiveMatchUpdater
 import com.cshep4.premierpredictor.matchupdate.component.match.MatchReader
 import com.cshep4.premierpredictor.matchupdate.component.match.MatchWriter
+import com.cshep4.premierpredictor.matchupdate.component.notify.NotificationDecorator
 import com.cshep4.premierpredictor.matchupdate.component.score.ScoresUpdatedReader
 import com.cshep4.premierpredictor.matchupdate.component.score.UserScoreUpdater
 import com.cshep4.premierpredictor.matchupdate.data.Match
@@ -42,7 +42,7 @@ internal class UpdateMatchServiceTest {
     private lateinit var userScoreUpdater: UserScoreUpdater
 
     @Mock
-    private lateinit var emailDecorator: EmailDecorator
+    private lateinit var notificationDecorator: NotificationDecorator
 
     @Mock
     private lateinit var scoresUpdatedReader: ScoresUpdatedReader
@@ -148,21 +148,21 @@ internal class UpdateMatchServiceTest {
             updateMatchService.updateLiveMatches()
         }
 
-        verify(emailDecorator).operationNotification(userScoreUpdater::update)
+        verify(notificationDecorator).send(userScoreUpdater::update)
     }
 
     @Test
     fun `'updateLiveMatches' gets matches from dynamodb, checks if all today's matches have finished and does not update scores if its already been done today`() {
         mockMatchUpdateWithFinishedMatch()
 
-        whenever(scoresUpdatedReader.scoresLastUpdated()).thenReturn(LocalDate.now().minusDays(1))
+        whenever(scoresUpdatedReader.scoresLastUpdated()).thenReturn(LocalDate.now())
 
         runBlocking {
             updateMatchService.updateLiveMatches()
         }
 
         verify(matchReader, times(0)).retrieveTodaysMatches()
-        verify(emailDecorator, times(0)).operationNotification(userScoreUpdater::update)
+        verify(notificationDecorator, times(0)).send(userScoreUpdater::update)
     }
 
     @Test
@@ -178,7 +178,7 @@ internal class UpdateMatchServiceTest {
             updateMatchService.updateLiveMatches()
         }
 
-        verify(emailDecorator, times(0)).operationNotification(userScoreUpdater::update)
+        verify(notificationDecorator, times(0)).send(userScoreUpdater::update)
     }
 
     @Test
@@ -192,7 +192,7 @@ internal class UpdateMatchServiceTest {
             updateMatchService.updateLiveMatches()
         }
 
-        verify(emailDecorator, times(0)).operationNotification(userScoreUpdater::update)
+        verify(notificationDecorator, times(0)).send(userScoreUpdater::update)
     }
 
     private fun mockMatchUpdateWithFinishedMatch(): MatchFacts {

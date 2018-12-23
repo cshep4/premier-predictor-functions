@@ -1,5 +1,6 @@
 package com.cshep4.premierpredictor.matchdatarefresh.data.match
 
+import com.cshep4.premierpredictor.matchdatarefresh.data.Match
 import com.cshep4.premierpredictor.matchdatarefresh.data.commentary.Commentary
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.correctStatus
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.getFullTeamName
@@ -97,6 +98,17 @@ data class MatchFacts(
 		@JsonDeserialize(using = LocalDateTimeDeserializer::class)
 		var lastUpdated: LocalDateTime? = LocalDateTime.now(Clock.systemUTC())
 ) {
+
+	fun toMatch(): Match = Match(
+			id = this.id!!.toLong(),
+			hTeam = getFullTeamName(this.localTeamName)!!,
+			aTeam = getFullTeamName(this.visitorTeamName)!!,
+			hGoals = this.localTeamScore?.toIntOrNull(),
+			aGoals = this.visitorTeamScore?.toIntOrNull(),
+			played = getPlayed(),
+			dateTime = getDateTime(),
+			matchday = this.week!!.toInt())
+
 	fun toSantisedMatchFacts() = MatchFacts(
 			penaltyVisitor = this.penaltyVisitor,
 			venue = this.venue,

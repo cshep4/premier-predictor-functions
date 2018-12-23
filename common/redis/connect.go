@@ -17,7 +17,6 @@ func connect(network, addr string) (radix.Conn, error) {
 
 func Dial() radix.Conn {
 	address := os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT")
-
 	conn, err := connect("tcp", address)
 	util.CheckErr(err)
 

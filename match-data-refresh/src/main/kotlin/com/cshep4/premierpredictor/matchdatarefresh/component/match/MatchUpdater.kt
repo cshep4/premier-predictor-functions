@@ -1,45 +1,32 @@
 package com.cshep4.premierpredictor.matchdatarefresh.component.match
 
-import com.cshep4.premierpredictor.matchdatarefresh.component.api.ApiRequester
-import com.cshep4.premierpredictor.matchdatarefresh.component.time.Time
+import com.cshep4.premierpredictor.matchdatarefresh.data.Match
 import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
-import com.cshep4.premierpredictor.matchdatarefresh.entity.MatchFactsEntity
-import com.cshep4.premierpredictor.matchdatarefresh.extensions.isInFuture
-import com.cshep4.premierpredictor.matchdatarefresh.repository.MatchFactsRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class MatchUpdater {
     @Autowired
-    private lateinit var apiRequester: ApiRequester
+    private lateinit var overrideMatchRetriever: OverrideMatchRetriever
 
     @Autowired
-    private lateinit var matchFactsRepository: MatchFactsRepository
+    private lateinit var matchOverrider: MatchOverrider
 
     @Autowired
-    private lateinit var time: Time
+    private lateinit var matchWriter: MatchWriter
 
-    fun matchData(): List<MatchFacts> {
-        val apiResult = apiRequester.retrieveFixtures()
+    fun update(matchFacts: List<MatchFacts>): List<Match> {
+        if (matchFacts.isEmpty()) {
+            return emptyList()
+        }
 
-        val updated = matchFactsRepository.findAll()
-                .filter { it.getDateTime()!!.isInFuture() }
-                .map { mergeWithLatestVersion(it.toDto(), apiResult.firstOrNull { m -> it.id == m.id }) }
+        val matches = matchFacts.map { it.toMatch() }
 
-        val updatedMatchEntities = updated.map { MatchFactsEntity.fromDto(it) }
+        val overrides = overrideMatchRetriever.findAll()
 
-        matchFactsRepository.saveAll(updatedMatchEntities)
+        val overriddenMatches = matchOverrider.update(matches, overrides)
 
-        return updated
-    }
-
-    private fun mergeWithLatestVersion(match: MatchFacts, apiMatch: MatchFacts?): MatchFacts {
-        apiMatch ?: return match
-
-        apiMatch.commentary = match.commentary
-        apiMatch.lastUpdated = time.localDateTimeNow()
-
-        return apiMatch
+        return matchWriter.update(overriddenMatches)
     }
 }

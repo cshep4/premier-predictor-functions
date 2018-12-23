@@ -91,7 +91,7 @@ dependencies {
 
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5"
     compile "com.fasterxml.jackson.core:jackson-databind:2.9.5"
-
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile "org.springframework.cloud:spring-cloud-function-adapter-aws"
 	compile "org.springframework.boot:spring-boot-starter-web"
 
@@ -103,8 +103,10 @@ dependencies {
 	implementation 'com.github.kittinunf.fuel:fuel:1.15.1'
 	compile 'com.sendgrid:sendgrid-java:4.0.1'
 	compile 'javax.xml.bind:jaxb-api:2.3.0'
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.1'
 	compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.251'
 	compile group: 'com.github.spring-data-dynamodb', name: 'spring-data-dynamodb', version: '5.0.2'
+	compile group: 'com.amazonaws', name: 'aws-java-sdk-sns'
 
 	runtime('mysql:mysql-connector-java')
 

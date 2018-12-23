@@ -30,12 +30,12 @@ func (l LiveMatchCheckService) ServiceName() string {
 func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 	defer l.redis.Close()
 
-	err := l.redis.Flush()
-
-	if err != nil {
-		log.Println("FLUSH ERROR - " + err.Error())
-		return false
-	}
+	//err := l.redis.Flush()
+	//
+	//if err != nil {
+	//	log.Println("FLUSH ERROR - " + err.Error())
+	//	return false
+	//}
 
 	matchFacts, apiErr := l.api.GetTodaysMatches()
 

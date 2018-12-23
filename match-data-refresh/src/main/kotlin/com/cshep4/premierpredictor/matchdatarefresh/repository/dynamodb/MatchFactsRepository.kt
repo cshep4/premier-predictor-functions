@@ -1,4 +1,4 @@
-package com.cshep4.premierpredictor.matchdatarefresh.repository
+package com.cshep4.premierpredictor.matchdatarefresh.repository.dynamodb
 
 import com.cshep4.premierpredictor.matchdatarefresh.entity.MatchFactsEntity
 import org.socialsignin.spring.data.dynamodb.repository.EnableScan

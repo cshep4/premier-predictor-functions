@@ -1,18 +1,8 @@
-# Welcome to serverless. Read the docs
-# https://serverless.com/framework/docs/
-
-# Serverless.yml is the configuration the CLI
-# uses to deploy your code to your provider of choice
-
-# The `service` block is the name of the service
 service: premier-predictor
 
-plugins:
-  # - serverless-local-schedule
 custom:
   secrets: ${file(secrets.json)}
 
-# The `provider` block defines where your service will be deployed
 provider:
   name: aws
   profile: personal
@@ -31,6 +21,7 @@ provider:
     API_URL: ${self:custom.secrets.apiUrl}
     API_COMMENTARY_URL: ${self:custom.secrets.apiCommentaryUrl}
     SEND_GRID_API_KEY: ${self:custom.secrets.sendgridApiKey}
+    PHONE_NUMBER: ${self:custom.secrets.sendgridApiKey}
 
 package:
  exclude:
@@ -40,6 +31,7 @@ package:
    - live-match-check/**
    - score-update/**
    - get-live-matches/**
+   - fixture-update/**
  include:
    - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
    - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
@@ -48,11 +40,11 @@ package:
    - get-live-matches/bin/**
 
 functions:
-  fixture-update:
-    runtime: nodejs8.10
-    handler: fixture-update/index.handler
-    events:
-      - schedule: cron(0 3 ? * * *)
+  # fixture-update:
+  #   runtime: nodejs8.10
+  #   handler: fixture-update/index.handler
+  #   events:
+  #     - schedule: cron(0 3 ? * * *)
   match-update:
     runtime: java8
     memorySize: 1592
@@ -66,8 +58,8 @@ functions:
       - schedule: rate(1 minute)
   match-data-refresh:
     runtime: java8
-    memorySize: 1024
-    timeout: 60
+    memorySize: 2048
+    timeout: 600
     handler: com.cshep4.premierpredictor.matchdatarefresh.handler.aws.MatchDataRefreshHandler
     environment:
       FUNCTION_NAME: matchDataRefresh

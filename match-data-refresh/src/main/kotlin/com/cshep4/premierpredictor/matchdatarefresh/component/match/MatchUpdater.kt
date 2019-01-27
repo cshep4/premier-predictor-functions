@@ -5,6 +5,7 @@ import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
+
 @Component
 class MatchUpdater {
     @Autowired

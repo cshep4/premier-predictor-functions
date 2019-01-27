@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import java.time.format.DateTimeParseException
 
 @Component
 class DataUpdater {
@@ -23,7 +24,7 @@ class DataUpdater {
     private lateinit var matchUpdater: MatchUpdater
 
     fun matchData(): List<MatchFacts> = runBlocking {
-        val apiResult = apiRequester.retrieveFixtures()
+        val apiResult = apiRequester.retrieveFixtures().filter{ isValidDateTime(it) }
 
         val matchUpdateResult = Channel<List<Match>>()
         val matchFactsUpdateResult = Channel<List<MatchFacts>>()
@@ -40,5 +41,15 @@ class DataUpdater {
         System.out.println(matchFactsUpdateResult.receive())
 
         apiResult
+    }
+
+    private fun isValidDateTime(match: MatchFacts): Boolean {
+        return try {
+            match.getDateTime()
+
+            true
+        } catch (e: DateTimeParseException) {
+            false
+        }
     }
 }

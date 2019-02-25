@@ -24,7 +24,7 @@ class DataUpdater {
     private lateinit var matchUpdater: MatchUpdater
 
     fun matchData(): List<MatchFacts> = runBlocking {
-        val apiResult = apiRequester.retrieveFixtures().filter{ isValidDateTime(it) }
+        val apiResult = apiRequester.retrieveFixtures().map{ validateDateTime(it) }
 
         val matchUpdateResult = Channel<List<Match>>()
         val matchFactsUpdateResult = Channel<List<MatchFacts>>()
@@ -43,13 +43,16 @@ class DataUpdater {
         apiResult
     }
 
-    private fun isValidDateTime(match: MatchFacts): Boolean {
+    private fun validateDateTime(match: MatchFacts): MatchFacts {
         return try {
             match.getDateTime()
 
-            true
+            match
         } catch (e: DateTimeParseException) {
-            false
+            match.formattedDate = "01.06.2019"
+            match.time = "12:00"
+
+            match
         }
     }
 }

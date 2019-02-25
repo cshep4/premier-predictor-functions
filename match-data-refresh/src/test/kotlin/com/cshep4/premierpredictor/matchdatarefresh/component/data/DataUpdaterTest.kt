@@ -27,8 +27,8 @@ internal class DataUpdaterTest {
     private lateinit var dataUpdater: DataUpdater
 
     @Test
-    fun `'matchData' will retrieve data from API and call relevent methods to update data`() {
-        val matchFacts = listOf(MatchFacts())
+    fun `'matchData' will retrieve data from API and call relevant methods to update data`() {
+        val matchFacts = listOf(MatchFacts(formattedDate = "01.01.2018", time = "12:00"))
 
         whenever(apiRequester.retrieveFixtures()).thenReturn(matchFacts)
 

@@ -2,7 +2,6 @@ package service
 
 import (
 	. "github.com/ahl5esoft/golang-underscore"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	. "premier-predictor-functions/common/api"
 	interfaces2 "premier-predictor-functions/common/api/interfaces"

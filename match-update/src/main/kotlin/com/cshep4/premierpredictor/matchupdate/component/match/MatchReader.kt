@@ -6,18 +6,18 @@ import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.PredictedMatch
 import com.cshep4.premierpredictor.matchupdate.extensions.isToday
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNullOrEmpty
-import com.cshep4.premierpredictor.matchupdate.repository.dynamodb.MatchFactsRepository
-import com.cshep4.premierpredictor.matchupdate.repository.sql.FixturesRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class MatchReader {
     @Autowired
-    private lateinit var fixturesRepository: FixturesRepository
+    private lateinit var fixtureRepository: FixtureRepository
 
     @Autowired
-    private lateinit var matchFactsRepository: MatchFactsRepository
+    private lateinit var liveMatchRepository: LiveMatchRepository
 
     @Autowired
     private lateinit var predictionReader: PredictionReader
@@ -25,14 +25,13 @@ class MatchReader {
     @Autowired
     private lateinit var predictionMerger: PredictionMerger
 
-    fun retrieveAllMatches(): List<Match> = fixturesRepository.findAll()
-            .map { it.toDto() }
+    fun retrieveAllFixtures(): List<Match> = fixtureRepository.findAll()
 
-    fun retrieveTodaysMatches(): List<Match> = retrieveAllMatches()
+    fun retrieveTodaysMatches(): List<Match> = retrieveAllFixtures()
             .filter { it.dateTime!!.isToday() }
 
-    fun retrieveAllMatchesWithPredictions(id: Long) : List<PredictedMatch> {
-        val matches = retrieveAllMatches()
+    fun retrieveAllMatchesWithPredictions(id: String) : List<PredictedMatch> {
+        val matches = retrieveAllFixtures()
 
         matches.whenNullOrEmpty { return emptyList() }
 
@@ -41,6 +40,6 @@ class MatchReader {
         return predictionMerger.merge(matches, predictions)
     }
 
-    fun getAllMatchIds(): List<String?> = matchFactsRepository.findAll()
+    fun getAllMatchIds(): List<String?> = liveMatchRepository.findAll()
             .map { it.id }
 }

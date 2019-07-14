@@ -4,8 +4,7 @@ import com.cshep4.premierpredictor.matchupdate.component.update.CommentaryRetrie
 import com.cshep4.premierpredictor.matchupdate.component.update.MatchFactsRetriever
 import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Commentary
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.entity.MatchFactsEntity
-import com.cshep4.premierpredictor.matchupdate.repository.dynamodb.MatchFactsRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -15,7 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 class LiveMatchUpdater {
     @Autowired
-    private lateinit var matchFactsRepository: MatchFactsRepository
+    private lateinit var liveMatchRepository: LiveMatchRepository
 
     @Autowired
     private lateinit var matchFactsRetriever: MatchFactsRetriever
@@ -24,10 +23,8 @@ class LiveMatchUpdater {
     private lateinit var commentaryRetriever: CommentaryRetriever
 
     fun retrieveLatest(id: String): MatchFacts? {
-        val storedMatch = matchFactsRepository
+        val storedMatch = liveMatchRepository
                 .findById(id)
-                .map { it.toDto() }
-                .orElse(null)
 
         return updateMatchFacts(storedMatch, id)
     }
@@ -44,10 +41,10 @@ class LiveMatchUpdater {
             commentaryChannel.send(commentaryRetriever.getLatest(id))
         }
 
-        getUpToDateMatchFacts(storedMatch, matchChannel.receive(), commentaryChannel.receive())
+        updateMatchFacts(storedMatch, matchChannel.receive(), commentaryChannel.receive())
     }
 
-    private fun getUpToDateMatchFacts(storedMatch: MatchFacts?, updatedMatch: MatchFacts?, updatedCommentary: Commentary?): MatchFacts? {
+    private fun updateMatchFacts(storedMatch: MatchFacts?, updatedMatch: MatchFacts?, updatedCommentary: Commentary?): MatchFacts? {
         val matchFacts = updatedMatch ?: storedMatch ?: return null
 
         matchFacts.commentary = when (updatedCommentary) {
@@ -55,7 +52,7 @@ class LiveMatchUpdater {
             else -> updatedCommentary
         }
 
-        matchFactsRepository.save(MatchFactsEntity.fromDto(matchFacts))
+        liveMatchRepository.save(matchFacts)
 
         return matchFacts
     }

@@ -1,16 +1,12 @@
 package com.cshep4.premierpredictor.matchupdate.entity
 
 import com.cshep4.premierpredictor.matchupdate.data.Match
+import org.bson.codecs.pojo.annotations.BsonProperty
 import java.time.LocalDateTime
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
 
-@Entity
-@Table(name = "Match")
 data class MatchEntity (
-        @Id
-        val id: Long = 0,
+        @BsonProperty("_id")
+        var id: String = "",
         var hTeam: String = "",
         var aTeam: String = "",
         var hGoals: Int? = null,

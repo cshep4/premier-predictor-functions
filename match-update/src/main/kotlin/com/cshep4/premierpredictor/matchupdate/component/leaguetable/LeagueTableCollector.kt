@@ -15,12 +15,12 @@ class LeagueTableCollector {
     private lateinit var leagueTableCalculator: LeagueTableCalculator
 
     fun getCurrentLeagueTable() : LeagueTable {
-        val matches = matchReader.retrieveAllMatches()
+        val matches = matchReader.retrieveAllFixtures()
 
         return createLeagueTableFromMatches(matches)
     }
 
-    fun getPredictedLeagueTable(id: Long): LeagueTable {
+    fun getPredictedLeagueTable(id: String): LeagueTable {
         val matches = matchReader.retrieveAllMatchesWithPredictions(id)
                 .map { it.toMatch() }
 

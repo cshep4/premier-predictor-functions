@@ -3,7 +3,6 @@ package com.cshep4.premierpredictor.matchupdate.component.update
 import com.cshep4.premierpredictor.matchupdate.component.api.ApiRequester
 import com.cshep4.premierpredictor.matchupdate.component.time.Time
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.repository.dynamodb.MatchFactsRepository
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever

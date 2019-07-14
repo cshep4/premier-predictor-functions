@@ -3,7 +3,7 @@ package com.cshep4.premierpredictor.matchupdate.data
 import java.time.LocalDateTime
 
 data class PredictedMatch (
-        val id: Long = 0,
+        val id: String = "",
         var predictionId: Long? = null,
         var hTeam: String = "",
         var aTeam: String = "",
@@ -15,8 +15,7 @@ data class PredictedMatch (
         var dateTime: LocalDateTime? = null,
         var matchday: Int = 0
 ) {
-    fun updatePrediction(id: Long?, hGoals: Int?, aGoals: Int?){
-        this.predictionId = id
+    fun updatePrediction(hGoals: Int?, aGoals: Int?){
         this.hGoals = hGoals
         this.aGoals = aGoals
     }

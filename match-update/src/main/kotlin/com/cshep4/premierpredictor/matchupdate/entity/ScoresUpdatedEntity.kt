@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 @RedisHash("ScoresUpdated")
 data class ScoresUpdatedEntity(
-        val id: Int = 1,
+        var id: Int = 1,
         var lastUpdated: LocalDate = LocalDate.now(Clock.systemUTC())
 ){
     fun toDto(): ScoresUpdated = ScoresUpdated(

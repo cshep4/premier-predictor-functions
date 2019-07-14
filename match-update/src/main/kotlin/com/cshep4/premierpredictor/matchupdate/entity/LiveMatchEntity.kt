@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.RedisHash
 @RedisHash("LiveMatch")
 data class LiveMatchEntity(
         @Id
-        val id: String = "",
+        var id: String = "",
         var hTeam: String = "",
         var aTeam: String = "",
         var formattedDate: String = ""

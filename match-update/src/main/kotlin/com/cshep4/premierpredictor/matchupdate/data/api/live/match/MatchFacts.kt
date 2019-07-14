@@ -20,28 +20,28 @@ import java.util.*
 
 data class MatchFacts(
 		@JsonProperty("id")
-		val id: String? = null,
+		var id: String? = null,
 
 		@JsonProperty("comp_id")
-		val compId: String? = null,
+		var compId: String? = null,
 
 		@JsonProperty("formatted_date")
 		var formattedDate: String? = null,
 
 		@JsonProperty("season")
-		val season: String? = null,
+		var season: String? = null,
 
 		@JsonProperty("week")
-		val week: String? = null,
+		var week: String? = null,
 
 		@JsonProperty("venue")
-		val venue: String? = null,
+		var venue: String? = null,
 
 		@JsonProperty("venue_id")
-		val venueId: String? = null,
+		var venueId: String? = null,
 
 		@JsonProperty("venue_city")
-		val venueCity: String? = null,
+		var venueCity: String? = null,
 
 		@JsonProperty("status")
 		var status: String? = null,
@@ -53,7 +53,7 @@ data class MatchFacts(
 		var time: String? = null,
 
 		@JsonProperty("localteam_id")
-		val localTeamId: String? = null,
+		var localTeamId: String? = null,
 
 		@JsonProperty("localteam_name")
 		var localTeamName: String? = null,
@@ -62,7 +62,7 @@ data class MatchFacts(
 		var localTeamScore: String? = null,
 
 		@JsonProperty("visitorteam_id")
-		val visitorTeamId: String? = null,
+		var visitorTeamId: String? = null,
 
 		@JsonProperty("visitorteam_name")
 		var visitorTeamName: String? = null,
@@ -71,22 +71,22 @@ data class MatchFacts(
 		var visitorTeamScore: String? = null,
 
 		@JsonProperty("ht_score")
-		val htScore: String? = null,
+		var htScore: String? = null,
 
 		@JsonProperty("ft_score")
-		val ftScore: String? = null,
+		var ftScore: String? = null,
 
 		@JsonProperty("et_score")
-		val etScore: String? = null,
+		var etScore: String? = null,
 
 		@JsonProperty("penalty_local")
-		val penaltyLocal: String? = null,
+		var penaltyLocal: String? = null,
 
 		@JsonProperty("penalty_visitor")
-		val penaltyVisitor: String? = null,
+		var penaltyVisitor: String? = null,
 
 		@JsonProperty("events")
-		val events: List<Event>? = null,
+		var events: List<Event>? = null,
 
 		@JsonIgnore
 		@JsonProperty("commentary")
@@ -99,7 +99,7 @@ data class MatchFacts(
 		var lastUpdated: LocalDateTime? = LocalDateTime.now(Clock.systemUTC())
 ) {
 	fun toMatch(): Match = Match(
-			id = this.id!!.toLong(),
+			id = this.id!!,
 			hTeam = getFullTeamName(this.localTeamName)!!,
 			aTeam = getFullTeamName(this.visitorTeamName)!!,
 			hGoals = this.localTeamScore?.toIntOrNull(),
@@ -137,18 +137,18 @@ data class MatchFacts(
 
 	@JsonIgnore
 	fun getDateTime(): LocalDateTime? {
-		val time = LocalTime.parse(this.time)
-		val date = LocalDate.parse(this.formattedDate, DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH))
+		var time = LocalTime.parse(this.time)
+		var date = LocalDate.parse(this.formattedDate, DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH))
 
 		return LocalDateTime.of(date, time)
 	}
 
 	@JsonIgnore
 	fun setDateTime(localDateTime: LocalDateTime) {
-		val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+		var timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
 		this.time = localDateTime.format(timeFormatter)
 
-		val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH)
+		var dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH)
 		this.formattedDate = localDateTime.format(dateFormatter)
 	}
 

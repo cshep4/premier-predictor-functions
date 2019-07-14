@@ -4,17 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Comment(
 		@JsonProperty("id")
-		val id: String? = null,
+		var id: String? = null,
 
 		@JsonProperty("important")
-		val important: String? = null,
+		var important: String? = null,
 
 		@JsonProperty("isgoal")
-		val goal: String? = null,
+		var goal: String? = null,
 
 		@JsonProperty("minute")
-		val minute: String? = null,
+		var minute: String? = null,
 
 		@JsonProperty("comment")
-		val comment: String? = null
+		var comment: String? = null
 )

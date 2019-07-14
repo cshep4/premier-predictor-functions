@@ -2,32 +2,32 @@ package com.cshep4.premierpredictor.matchupdate.component.match
 
 import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.entity.MatchEntity
-import com.cshep4.premierpredictor.matchupdate.entity.MatchFactsEntity
-import com.cshep4.premierpredictor.matchupdate.repository.dynamodb.MatchFactsRepository
-import com.cshep4.premierpredictor.matchupdate.repository.sql.FixturesRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class MatchWriter {
     @Autowired
-    private lateinit var fixturesRepository: FixturesRepository
+    private lateinit var fixtureRepository: FixtureRepository
 
     @Autowired
-    private lateinit var matchFactsRepository: MatchFactsRepository
+    private lateinit var liveMatchRepository: LiveMatchRepository
 
-    fun matches(matches: Collection<Match>): List<Match> {
-        val matchEntities = matches.map { MatchEntity.fromDto(it) }
+    fun fixtures(fixtures: Collection<Match>): List<Match> {
+        val fixtureList = fixtures.toList()
 
-        return fixturesRepository.saveAll(matchEntities)
-                .map { it.toDto() }
+        fixtureRepository.save(fixtureList)
+
+        return fixtureList
     }
 
     fun matchFacts(matchFacts: Collection<MatchFacts>): List<MatchFacts> {
-        val matchFactsEntities = matchFacts.map { MatchFactsEntity.fromDto(it) }
+        val matches = matchFacts.toList()
 
-        return matchFactsRepository.saveAll(matchFactsEntities)
-                .map { it.toDto() }
+        liveMatchRepository.save(matches)
+
+        return matches
     }
 }

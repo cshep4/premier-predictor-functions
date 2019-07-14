@@ -1,16 +1,15 @@
 package com.cshep4.premierpredictor.matchupdate.data
 
 data class MatchPredictionResult (
-        val id: Long = 0,
-        val userId: Long = 0,
+        val userId: String = "",
+        var matchId: String = "",
         var hTeam: String = "",
         var aTeam: String = "",
         var hGoals: Int? = null,
         var aGoals: Int? = null,
         var hPredictedGoals: Int? = null,
         var aPredictedGoals: Int? = null,
-        var matchday: Int = 0,
-        var matchId: Long = 0
+        var matchday: Int = 0
 ) {
     fun toPredictedMatch(): Match = Match(
             id = this.matchId,

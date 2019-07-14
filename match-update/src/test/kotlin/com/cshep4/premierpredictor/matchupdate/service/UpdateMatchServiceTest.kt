@@ -102,7 +102,7 @@ internal class UpdateMatchServiceTest {
 
         assertThat(result, `is`(true))
         verify(matchWriter).matchFacts(updatedMatches)
-        verify(matchWriter, times(0)).matches(any())
+        verify(matchWriter, times(0)).fixtures(any())
         verify(liveMatchDataHandler, times(0)).remove(any())
         verify(userScoreUpdater, times(0)).update()
     }
@@ -118,7 +118,7 @@ internal class UpdateMatchServiceTest {
         val expectedSavedMatch = listOf(match.toMatch())
 
         assertThat(result, `is`(true))
-        verify(matchWriter).matches(expectedSavedMatch)
+        verify(matchWriter).fixtures(expectedSavedMatch)
     }
 
     @Test

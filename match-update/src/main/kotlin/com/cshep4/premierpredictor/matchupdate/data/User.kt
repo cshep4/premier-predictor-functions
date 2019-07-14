@@ -2,7 +2,7 @@ package com.cshep4.premierpredictor.matchupdate.data
 
 import java.time.LocalDateTime
 
-data class User (val id: Long? = 0,
+data class User (val id: String? = "",
                  var firstName: String = "",
                  var surname: String = "",
                  var email: String? = null,

@@ -3,7 +3,7 @@ package com.cshep4.premierpredictor.matchupdate.data
 import java.time.LocalDateTime
 
 data class Match (
-        val id: Long = 0,
+        val id: String = "",
         var hTeam: String = "",
         var aTeam: String = "",
         var hGoals: Int? = null,
@@ -21,17 +21,4 @@ data class Match (
             played = this.played,
             dateTime = this.dateTime,
             matchday = this.matchday)
-
-    fun toMatchWithOverride(override: OverrideMatch): MatchWithOverride = MatchWithOverride(
-            id = this.id,
-            hTeam = this.hTeam,
-            aTeam = this.aTeam,
-            hGoals = this.hGoals,
-            aGoals = this.aGoals,
-            hOverride = override.hGoals,
-            aOverride = override.aGoals,
-            played = this.played,
-            dateTime = this.dateTime,
-            matchday = this.matchday
-    )
 }

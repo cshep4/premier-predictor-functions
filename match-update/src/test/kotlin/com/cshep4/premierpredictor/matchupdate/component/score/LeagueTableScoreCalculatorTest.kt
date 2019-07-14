@@ -32,8 +32,8 @@ internal class LeagueTableScoreCalculatorTest {
 
     @Test
     fun `'calculate' gets a league table of the current scores`() {
-        val users = listOf(User(id = 1))
-        val predictedMatches = listOf(MatchPredictionResult(userId = 1, matchday = 4, hGoals = 1, aGoals = 1))
+        val users = listOf(User(id = "1"))
+        val predictedMatches = listOf(MatchPredictionResult(userId = "1", matchday = 4, hGoals = 1, aGoals = 1))
         val leagueTable = LeagueTable()
 
         whenever(leagueTableCollector.getCurrentLeagueTable()).thenReturn(leagueTable)
@@ -47,15 +47,15 @@ internal class LeagueTableScoreCalculatorTest {
     @Test
     fun `'calculate' loops through each user and creates a league table based on their predicted scores`() {
         val users = listOf(
-                User(id = 1),
-                User(id = 2),
-                User(id = 3)
+                User(id = "1"),
+                User(id = "2"),
+                User(id = "3")
         )
 
         val predictedMatches = listOf(
-                MatchPredictionResult(userId = 1, matchday = 4, hGoals = 1, aGoals = 1),
-                MatchPredictionResult(userId = 2, matchday = 4, hGoals = 1, aGoals = 1),
-                MatchPredictionResult(userId = 3, matchday = 4, hGoals = 1, aGoals = 1)
+                MatchPredictionResult(userId = "1", matchday = 4, hGoals = 1, aGoals = 1),
+                MatchPredictionResult(userId = "2", matchday = 4, hGoals = 1, aGoals = 1),
+                MatchPredictionResult(userId = "3", matchday = 4, hGoals = 1, aGoals = 1)
         )
 
         val leagueTable = LeagueTable()
@@ -71,15 +71,15 @@ internal class LeagueTableScoreCalculatorTest {
     @Test
     fun `'calculate' loops through each user and compares their league table to the real one and awards 5 points for matching league positions, then returns the list of users`() {
         val users = listOf(
-                User(id = 1, score = 0),
-                User(id = 2, score = 0),
-                User(id = 3, score = 0)
+                User(id = "1", score = 0),
+                User(id = "2", score = 0),
+                User(id = "3", score = 0)
         )
 
         val predictedMatches = listOf(
-                MatchPredictionResult(userId = 1, matchday = 4, hGoals = 1, aGoals = 1),
-                MatchPredictionResult(userId = 2, matchday = 4, hGoals = 1, aGoals = 1),
-                MatchPredictionResult(userId = 3, matchday = 4, hGoals = 1, aGoals = 1)
+                MatchPredictionResult(userId = "1", matchday = 4, hGoals = 1, aGoals = 1),
+                MatchPredictionResult(userId = "2", matchday = 4, hGoals = 1, aGoals = 1),
+                MatchPredictionResult(userId = "3", matchday = 4, hGoals = 1, aGoals = 1)
         )
 
         val leagueTable1 = LeagueTable(table = mutableListOf(
@@ -120,11 +120,11 @@ internal class LeagueTableScoreCalculatorTest {
 
     @Test
     fun `'calculate' does not update if the league hasn't finished`() {
-        val users = listOf(User(id = 1, score = 0), User(id = 2, score = 0), User(id = 3, score = 0))
+        val users = listOf(User(id = "1", score = 0), User(id = "2", score = 0), User(id = "3", score = 0))
         val predictedMatches = listOf(
-                MatchPredictionResult(userId = 1, matchday = 1, hGoals = 1, aGoals = 2),
-                MatchPredictionResult(userId = 2, matchday = 2, hGoals = 3, aGoals = 0),
-                MatchPredictionResult(userId = 3, matchday = 3, hGoals = null, aGoals = null)
+                MatchPredictionResult(userId = "1", matchday = 1, hGoals = 1, aGoals = 2),
+                MatchPredictionResult(userId = "2", matchday = 2, hGoals = 3, aGoals = 0),
+                MatchPredictionResult(userId = "3", matchday = 3, hGoals = null, aGoals = null)
         )
 
         leagueTableScoreCalculator.calculate(users, predictedMatches)

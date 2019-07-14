@@ -11,28 +11,28 @@ import java.time.LocalDateTime
 
 data class Commentary(
 		@JsonProperty("match_id")
-		val matchId: String? = null,
+		var matchId: String? = null,
 
 		@JsonProperty("match_info")
-		val matchInfo: List<MatchInfo>? = null,
+		var matchInfo: List<MatchInfo>? = null,
 
 		@JsonProperty("lineup")
-		val lineup: Lineup? = null,
+		var lineup: Lineup? = null,
 
 		@JsonProperty("subs")
-		val subs: Lineup? = null,
+		var subs: Lineup? = null,
 
 		@JsonProperty("substitutions")
-		val substitutions: Substitutions? = null,
+		var substitutions: Substitutions? = null,
 
 		@JsonProperty("comments")
-		val comments: List<Comment>? = null,
+		var comments: List<Comment>? = null,
 
 		@JsonProperty("match_stats")
-		val matchStats: MatchStats? = null,
+		var matchStats: MatchStats? = null,
 
 		@JsonProperty("player_stats")
-		val playerStats: PlayerStats? = null,
+		var playerStats: PlayerStats? = null,
 
 		@JsonIgnore
 		@JsonProperty("lastUpdated")

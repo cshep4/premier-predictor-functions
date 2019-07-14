@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class MatchInfo(
 		@JsonProperty("stadium")
-		val stadium: String? = null,
+		var stadium: String? = null,
 
 		@JsonProperty("attendance")
-		val attendance: String? = null,
+		var attendance: String? = null,
 
 		@JsonProperty("referee")
-		val referee: String? = null
+		var referee: String? = null
 )

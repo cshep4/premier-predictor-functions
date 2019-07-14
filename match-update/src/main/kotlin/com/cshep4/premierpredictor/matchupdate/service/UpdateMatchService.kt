@@ -11,8 +11,6 @@ import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.extensions.isToday
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNotNullNorEmpty
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNullOrEmpty
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -59,7 +57,7 @@ class UpdateMatchService {
     }
 
     private fun processFinishedMatches(matches: Collection<Match>) {
-        matchWriter.matches(matches)
+        matchWriter.fixtures(matches)
         liveMatchDataHandler.remove(matches.map { it.id.toString() })
 
         System.out.println("haveScoresBeenUpdatedToday: " + scoresUpdatedReader.scoresLastUpdated().isToday())

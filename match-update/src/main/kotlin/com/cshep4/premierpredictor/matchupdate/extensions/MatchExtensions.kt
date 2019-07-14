@@ -4,7 +4,7 @@ import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.PredictedMatch
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
 
-fun List<PredictedMatch>.getMatchById(id: Long?): PredictedMatch =
+fun List<PredictedMatch>.getMatchById(id: String?): PredictedMatch =
         first { it.id == id }
 
 fun MatchFacts?.isPlaying(): Boolean =

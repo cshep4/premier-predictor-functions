@@ -29,7 +29,7 @@ internal class LeagueTableCollectorTest {
         val matches = listOf(Match(matchday = 1), Match(matchday = 5))
         val leagueTable = LeagueTable()
 
-        whenever(matchReader.retrieveAllMatches()).thenReturn(matches)
+        whenever(matchReader.retrieveAllFixtures()).thenReturn(matches)
         whenever(leagueTableCalculator.calculate(matches, LeagueTable.emptyTable())).thenReturn(leagueTable)
 
         val result = leagueTableCollector.getCurrentLeagueTable()
@@ -43,10 +43,10 @@ internal class LeagueTableCollectorTest {
         val matches = predictedMatches.map { it.toMatch() }
         val leagueTable = LeagueTable()
 
-        whenever(matchReader.retrieveAllMatchesWithPredictions(1)).thenReturn(predictedMatches)
+        whenever(matchReader.retrieveAllMatchesWithPredictions("1")).thenReturn(predictedMatches)
         whenever(leagueTableCalculator.calculate(matches, LeagueTable.emptyTable())).thenReturn(leagueTable)
 
-        val result = leagueTableCollector.getPredictedLeagueTable(1)
+        val result = leagueTableCollector.getPredictedLeagueTable("1")
 
         assertThat(result, `is`(leagueTable))
     }

@@ -28,9 +28,9 @@ internal class WinnerScoreCalculatorTest {
     private lateinit var winnerScoreCalculator: WinnerScoreCalculator
 
     private val users = listOf(
-            User(id = 1, score = 0, predictedWinner = TEAM_ONE),
-            User(id = 2, score = 0, predictedWinner = TEAM_TWO),
-            User(id = 3, score = 0, predictedWinner = TEAM_ONE)
+            User(id = "1", score = 0, predictedWinner = TEAM_ONE),
+            User(id = "2", score = 0, predictedWinner = TEAM_TWO),
+            User(id = "3", score = 0, predictedWinner = TEAM_ONE)
     )
 
     @Test

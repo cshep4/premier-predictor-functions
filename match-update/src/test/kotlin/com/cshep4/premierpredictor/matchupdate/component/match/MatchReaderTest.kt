@@ -2,12 +2,11 @@ package com.cshep4.premierpredictor.matchupdate.component.match
 
 import com.cshep4.premierpredictor.matchupdate.component.prediction.PredictionMerger
 import com.cshep4.premierpredictor.matchupdate.component.prediction.PredictionReader
+import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.Prediction
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.entity.MatchEntity
-import com.cshep4.premierpredictor.matchupdate.entity.MatchFactsEntity
-import com.cshep4.premierpredictor.matchupdate.repository.dynamodb.MatchFactsRepository
-import com.cshep4.premierpredictor.matchupdate.repository.sql.FixturesRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
 import com.nhaarman.mockito_kotlin.whenever
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -27,79 +26,78 @@ internal class MatchReaderTest {
     private lateinit var predictionMerger: PredictionMerger
 
     @Mock
-    private lateinit var fixturesRepository: FixturesRepository
+    private lateinit var fixtureRepository: FixtureRepository
 
     @Mock
-    private lateinit var matchFactsRepository: MatchFactsRepository
+    private lateinit var liveMatchRepository: LiveMatchRepository
 
     @InjectMocks
     private lateinit var matchReader: MatchReader
 
     @Test
-    fun `'retrieveAllMatches' should retrieve all matches`() {
-        val matchEntity = MatchEntity()
-        val matches = listOf(matchEntity)
-        whenever(fixturesRepository.findAll()).thenReturn(matches)
+    fun `'retrieveAllFixtures' should retrieve all matches`() {
+        val fixture = Match()
+        val matches = listOf(fixture)
+        whenever(fixtureRepository.findAll()).thenReturn(matches)
 
-        val result = matchReader.retrieveAllMatches()
+        val result = matchReader.retrieveAllFixtures()
 
         assertThat(result.isEmpty(), `is`(false))
-        assertThat(result[0], `is`(matchEntity.toDto()))
+        assertThat(result[0], `is`(fixture))
     }
 
     @Test
     fun `'retrieveTodaysMatches' should retrieve all matches that are being played today`() {
-        val today = MatchEntity(dateTime = LocalDateTime.now())
-        val tomorrow = MatchEntity(dateTime = LocalDateTime.now().plusDays(1))
-        val yesterday = MatchEntity(dateTime = LocalDateTime.now().minusDays(1))
+        val today = Match(dateTime = LocalDateTime.now())
+        val tomorrow = Match(dateTime = LocalDateTime.now().plusDays(1))
+        val yesterday = Match(dateTime = LocalDateTime.now().minusDays(1))
         val matches = listOf(today, tomorrow, yesterday)
 
-        whenever(fixturesRepository.findAll()).thenReturn(matches)
+        whenever(fixtureRepository.findAll()).thenReturn(matches)
 
         val result = matchReader.retrieveTodaysMatches()
 
-        val expectedResult = listOf(today.toDto())
+        val expectedResult = listOf(today)
 
         assertThat(result, `is`(expectedResult))
     }
 
     @Test
     fun `'retrieveAllMatches' should return empty list if no matches exist`() {
-        whenever(fixturesRepository.findAll()).thenReturn(emptyList())
+        whenever(fixtureRepository.findAll()).thenReturn(emptyList())
 
-        val result = matchReader.retrieveAllMatches()
+        val result = matchReader.retrieveAllFixtures()
 
         assertThat(result.isEmpty(), `is`(true))
     }
 
     @Test
     fun `'retrieveAllMatchesWithPredictions' should retrieve all matches with predicted scorelines by user id`() {
-        val matchEntities = listOf(MatchEntity(id = 1),
-                MatchEntity(id = 2))
+        val fixtures = listOf(Match(id = "1"),
+                Match(id = "2"))
 
-        val matches = matchEntities.map { it.toDto() }
-        val predictedMatches = matches.map { it.toPredictedMatch() }
+        val predictedFixtures = fixtures.map { it.toPredictedMatch() }
 
-        val predictions = listOf(Prediction(matchId = 1, hGoals = 2, aGoals = 3),
-                Prediction(matchId = 2, hGoals = 1, aGoals = 0))
+        val predictions = listOf(Prediction(matchId = "1", hGoals = 2, aGoals = 3),
+                Prediction(matchId = "2", hGoals = 1, aGoals = 0))
 
-        whenever(fixturesRepository.findAll()).thenReturn(matchEntities)
-        whenever(predictionReader.retrievePredictionsByUserId(1)).thenReturn(predictions)
-        whenever(predictionMerger.merge(matches, predictions)).thenReturn(predictedMatches)
+        whenever(fixtureRepository.findAll()).thenReturn(fixtures)
+        whenever(predictionReader.retrievePredictionsByUserId("1")).thenReturn(predictions)
+        whenever(predictionMerger.merge(fixtures, predictions)).thenReturn(predictedFixtures)
 
-        val result = matchReader.retrieveAllMatchesWithPredictions(1)
+        val result = matchReader.retrieveAllMatchesWithPredictions("1")
 
         assertThat(result.isEmpty(), `is`(false))
-        assertThat(result[0].id, `is`(1L))
-        assertThat(result[1].id, `is`(2L))
+        assertThat(result[0].id, `is`("1"))
+        assertThat(result[1].id, `is`("2"))
     }
 
     @Test
     fun `'getAllMatchIds' gets a list of all match ids`() {
-        val matches = listOf(MatchFactsEntity(id = "1"), MatchFactsEntity(id = "22"))
+        val matches = listOf(MatchFacts(id = "1"), MatchFacts(id = "22"))
         val ids = matches.map { it.id }
 
-        whenever(matchFactsRepository.findAll()).thenReturn(matches)
+        whenever(liveMatchRepository.findAll()).thenReturn(matches)
 
         val result = matchReader.getAllMatchIds()
 

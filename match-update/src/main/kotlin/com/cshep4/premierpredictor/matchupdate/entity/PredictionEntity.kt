@@ -1,32 +1,24 @@
 package com.cshep4.premierpredictor.matchupdate.entity
 
 import com.cshep4.premierpredictor.matchupdate.data.Prediction
-import javax.persistence.*
 
-@Entity
-@Table(name = "Prediction")
 data class PredictionEntity (
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long = 0,
+        var userId: String? = null,
+        var matchId: String? = null,
         var hGoals: Int? = null,
-        var aGoals: Int? = null,
-        var userId: Int? = null,
-        var matchId: Long? = null
+        var aGoals: Int? = null
 ){
     fun toDto(): Prediction = Prediction(
-            id = this.id,
-            hGoals = this.hGoals,
-            aGoals = this.aGoals,
             userId = this.userId,
-            matchId = this.matchId)
+            matchId = this.matchId,
+            aGoals = this.aGoals,
+            hGoals = this.hGoals)
 
     companion object {
         fun fromDto(dto: Prediction) = PredictionEntity(
-                id = dto.id,
-                hGoals = dto.hGoals,
-                aGoals = dto.aGoals,
                 userId = dto.userId,
-                matchId = dto.matchId)
+                matchId = dto.matchId,
+                hGoals = dto.hGoals,
+                aGoals = dto.aGoals)
     }
 }

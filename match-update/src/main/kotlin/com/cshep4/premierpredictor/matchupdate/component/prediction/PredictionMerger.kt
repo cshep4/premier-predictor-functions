@@ -14,7 +14,7 @@ class PredictionMerger {
             val id = it.id
             val prediction = predictions.firstOrNull{ p -> p.matchId == id } ?: Prediction(matchId = id, hGoals = null, aGoals = null)
 
-            it.updatePrediction(prediction.id, prediction.hGoals, prediction.aGoals)
+            it.updatePrediction(prediction.hGoals, prediction.aGoals)
         }
 
         return predictedMatches

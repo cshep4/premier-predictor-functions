@@ -2,6 +2,7 @@ package com.cshep4.premierpredictor.matchupdate.component.notify
 
 import com.cshep4.premierpredictor.matchupdate.component.notify.NotificationDecorator.Companion.EMAIL_ADDRESS
 import com.cshep4.premierpredictor.matchupdate.component.email.Emailer
+import com.cshep4.premierpredictor.matchupdate.component.messenger.Messenger
 import com.cshep4.premierpredictor.matchupdate.component.score.UserScoreUpdater
 import com.cshep4.premierpredictor.matchupdate.component.sms.SmsSender
 import com.nhaarman.mockito_kotlin.inOrder
@@ -20,7 +21,7 @@ internal class NotificationDecoratorTest {
     private lateinit var emailer: Emailer
 
     @Mock
-    private lateinit var smsSender: SmsSender
+    private lateinit var messenger: Messenger
 
     @InjectMocks
     private lateinit var notificationDecorator: NotificationDecorator
@@ -35,17 +36,17 @@ internal class NotificationDecoratorTest {
         notificationDecorator.send(userScoreUpdater::update)
 
         val inOrder = inOrder(
-                smsSender,
+                messenger,
                 emailer,
                 userScoreUpdater,
                 emailer,
-                smsSender
+                messenger
         )
 
-        inOrder.verify(smsSender).send("test", start)
+        inOrder.verify(messenger).send(start)
         inOrder.verify(emailer).send(EMAIL_ADDRESS, EMAIL_ADDRESS, start, start)
         inOrder.verify(userScoreUpdater).update()
         inOrder.verify(emailer).send(EMAIL_ADDRESS, EMAIL_ADDRESS, end, end)
-        inOrder.verify(smsSender).send("test", end)
+        inOrder.verify(messenger).send(end)
     }
 }

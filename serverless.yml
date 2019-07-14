@@ -7,6 +7,12 @@ provider:
   name: aws
   profile: personal
   region: us-east-1
+  logRetentionInDays: 14
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - lambda:InvokeFunction
+      Resource: "*"
   environment:
     DATABASE_URL: ${self:custom.secrets.dbUrl}
     DATABASE_USERNAME: ${self:custom.secrets.dbUser}
@@ -22,6 +28,7 @@ provider:
     API_COMMENTARY_URL: ${self:custom.secrets.apiCommentaryUrl}
     SEND_GRID_API_KEY: ${self:custom.secrets.sendgridApiKey}
     PHONE_NUMBER: ${self:custom.secrets.phoneNumber}
+    MESSENGER_CLIENT_URL: ${self:custom.secrets.messengerClientUrl}
 
 package:
  exclude:
@@ -32,12 +39,17 @@ package:
    - score-update/**
    - get-live-matches/**
    - fixture-update/**
+   - heroku-liveness-probe/**
+   - test-kotlin-quarkus/**
+   - message-builder/**
  include:
    - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
    - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
    - live-match-check/bin/**
    - score-update/bin/**
    - get-live-matches/bin/**
+   - heroku-liveness-probe/bin/**
+   - message-builder/build/package/bundle.zip
 
 functions:
   # fixture-update:
@@ -87,3 +99,62 @@ functions:
           resp: http
           method: get
           cors: true
+  messenger:
+    runtime: nodejs8.10
+    handler: messenger/handler.messenger
+    environment:
+      ACCESS_TOKEN: ${self:custom.secrets.messengerAccessToken}
+      VERIFY_TOKEN: ${self:custom.secrets.messengerVerifyToken}
+      FUNCTION_NAME: premier-predictor-dev-get-live-matches
+    events:
+      - http:
+          path: messenger
+          method: post
+          cors: true
+          integration: lambda
+      - http:
+          path: messenger
+          method: get
+          cors: true
+          integration: lambda
+  send-message:
+    runtime: go1.x
+    handler: send-message/bin/main
+    environment:
+      ACCESS_TOKEN: ${self:custom.secrets.messengerAccessToken}
+      PSID: ${self:custom.secrets.psid}
+    events:
+      - http:
+          path: messenger/send
+          resp: http
+          method: post
+          cors: true
+  heroku-liveness-probe:
+    runtime: go1.x
+    handler: heroku-liveness-probe/bin/main
+    environment:
+      HEROKU_API_KEY: ${self:custom.secrets.herokuApiKey}
+      HEROKU_HEALTH_URL: ${self:custom.secrets.herokuHealthUrl}
+    events:
+      - schedule: rate(1 minute)
+  message-builder:
+    handler: not.used
+    package:
+      artifact: message-builder/build/package/bundle.zip
+    runtime: provided
+    events:
+      - http:
+          path: /message/build
+          method: post
+#  test-kotlin-quarkus:
+#    handler: not.used
+#    package:
+#      artifact: test-kotlin-quarkus/build/package/bundle.zip
+#    runtime: provided
+#    events:
+#      - http:
+#          path: /ping
+#          method: get
+#      - http:
+#          path: /greet/{name}
+#          method: get

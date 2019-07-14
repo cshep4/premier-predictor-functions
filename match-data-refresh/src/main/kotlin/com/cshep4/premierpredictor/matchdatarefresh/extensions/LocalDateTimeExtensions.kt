@@ -9,3 +9,6 @@ fun LocalDateTime.isInFuture(): Boolean =
 
 fun LocalDateTime.isYesterday(): Boolean =
         this.toLocalDate() == LocalDate.now(Clock.systemUTC()).minusDays(1)
+
+fun LocalDateTime.isToday(): Boolean =
+        this.toLocalDate() == LocalDate.now(Clock.systemUTC())

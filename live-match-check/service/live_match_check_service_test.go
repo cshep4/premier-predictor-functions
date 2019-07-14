@@ -16,8 +16,9 @@ func TestUpdateLiveMatchesRetrievesMatchesFromApiMapsToLiveMatchAndStoresCurrent
 	apiMock, redisMock, liveMatchCheckService := setup()
 
 	dateTime := timeNowPlusMinutes(20)
+	now := timeNowPlusMinutes(0)
 
-	m1 := MatchFacts{LocalTeamName: "Test1", Status: "10"}
+	m1 := MatchFacts{LocalTeamName: "Test1", FormattedDate: now[0], Time: now[1], Status: "10"}
 	m2 := MatchFacts{LocalTeamName: "Test2", FormattedDate: dateTime[0], Time: dateTime[1], Status: "FT"}
 
 	matchFacts := []MatchFacts{m1, m2}
@@ -53,18 +54,18 @@ func TestUpdateLiveMatchesRetrievesMatchesFromApiMapsToLiveMatchAndStoresMatches
 	assert.Equal(t, true, result)
 }
 
-func TestUpdateLiveMatchesReturnsFalseIfThereIsAnErrorWithFlushingRedis(t *testing.T) {
-	apiMock, redisMock, liveMatchCheckService := setup()
-
-	redisMock.On("Flush").Return(errors.New(""))
-
-	result := liveMatchCheckService.UpdateLiveMatches()
-
-	apiMock.AssertNumberOfCalls(t, "GetTodaysMatches", 0)
-	redisMock.AssertNumberOfCalls(t, "SetLiveMatch", 0)
-	redisMock.AssertCalled(t, "Close")
-	assert.Equal(t, false, result)
-}
+//func TestUpdateLiveMatchesReturnsFalseIfThereIsAnErrorWithFlushingRedis(t *testing.T) {
+//	apiMock, redisMock, liveMatchCheckService := setup()
+//
+//	redisMock.On("Flush").Return(errors.New(""))
+//
+//	result := liveMatchCheckService.UpdateLiveMatches()
+//
+//	apiMock.AssertNumberOfCalls(t, "GetTodaysMatches", 0)
+//	redisMock.AssertNumberOfCalls(t, "SetLiveMatch", 0)
+//	redisMock.AssertCalled(t, "Close")
+//	assert.Equal(t, false, result)
+//}
 
 func TestUpdateLiveMatchesReturnsTrueIfNoMatchesAreToday(t *testing.T) {
 	apiMock, redisMock, liveMatchCheckService := setup()
@@ -124,7 +125,8 @@ func TestUpdateLiveMatchesReturnsFalseIfThereIsAProblemWithTheApiRequest(t *test
 func TestUpdateLiveMatchesReturnsFalseIfThereIsAProblemWithStoringToRedis(t *testing.T) {
 	apiMock, redisMock, liveMatchCheckService := setup()
 
-	m1 := MatchFacts{LocalTeamName: "Test1", Status: "10"}
+	now := timeNowPlusMinutes(0)
+	m1 := MatchFacts{LocalTeamName: "Test1", Status: "10", FormattedDate: now[0], Time: now[1]}
 
 	matchFacts := []MatchFacts{m1}
 

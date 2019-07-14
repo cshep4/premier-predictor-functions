@@ -5,6 +5,7 @@ import com.cshep4.premierpredictor.matchdatarefresh.component.matchfacts.MatchFa
 import com.cshep4.premierpredictor.matchdatarefresh.component.match.MatchUpdater
 import com.cshep4.premierpredictor.matchdatarefresh.data.Match
 import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
+import com.cshep4.premierpredictor.matchdatarefresh.extensions.isToday
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -24,7 +25,7 @@ class DataUpdater {
     private lateinit var matchUpdater: MatchUpdater
 
     fun matchData(): List<MatchFacts> = runBlocking {
-        val apiResult = apiRequester.retrieveFixtures().map{ validateDateTime(it) }
+        val apiResult = apiRequester.retrieveFixtures().map { validateDateTime(it) }
 
         val matchUpdateResult = Channel<List<Match>>()
         val matchFactsUpdateResult = Channel<List<MatchFacts>>()
@@ -45,7 +46,13 @@ class DataUpdater {
 
     private fun validateDateTime(match: MatchFacts): MatchFacts {
         return try {
-            match.getDateTime()
+            if (match.getDateTime()!!.isToday() && match.status == "Postp.") {
+                match.formattedDate = "01.06.2019"
+                match.time = "12:00"
+                match.status = ""
+            } else if (match.status == "Postp.") {
+                match.status = ""
+            }
 
             match
         } catch (e: DateTimeParseException) {

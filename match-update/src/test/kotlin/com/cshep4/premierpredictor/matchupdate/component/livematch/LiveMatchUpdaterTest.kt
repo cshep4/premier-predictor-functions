@@ -4,7 +4,7 @@ import com.cshep4.premierpredictor.matchupdate.component.update.CommentaryRetrie
 import com.cshep4.premierpredictor.matchupdate.component.update.MatchFactsRetriever
 import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Commentary
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -25,7 +25,7 @@ internal class LiveMatchUpdaterTest {
     }
 
     @Mock
-    private lateinit var liveMatchRepository: LiveMatchRepository
+    private lateinit var liveMatchServiceRepository: LiveMatchServiceRepository
 
     @Mock
     private lateinit var matchFactsRetriever: MatchFactsRetriever
@@ -43,7 +43,7 @@ internal class LiveMatchUpdaterTest {
         val updatedMatch = MatchFacts()
         val updatedCommentary = Commentary()
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(matchFacts)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(matchFacts)
         whenever(matchFactsRetriever.getLatest(ID)).thenReturn(updatedMatch)
         whenever(commentaryRetriever.getLatest(ID)).thenReturn(updatedCommentary)
 
@@ -53,7 +53,7 @@ internal class LiveMatchUpdaterTest {
         assertThat(result!!.commentary, `is`(updatedCommentary))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result)
+        verify(liveMatchServiceRepository).save(result)
     }
 
     @Test
@@ -61,7 +61,7 @@ internal class LiveMatchUpdaterTest {
         val commentary = Commentary()
         val matchFacts = MatchFacts(commentary = commentary)
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(matchFacts)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(matchFacts)
         whenever(matchFactsRetriever.getLatest(ID)).thenReturn(null)
 
         val result = liveMatchUpdater.retrieveLatest(ID)
@@ -69,7 +69,7 @@ internal class LiveMatchUpdaterTest {
         assertThat(result, `is`(matchFacts))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result!!)
+        verify(liveMatchServiceRepository).save(result!!)
     }
 
     @Test
@@ -77,7 +77,7 @@ internal class LiveMatchUpdaterTest {
         val commentary = Commentary()
         val matchFacts = MatchFacts(commentary = commentary)
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(matchFacts)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(matchFacts)
         whenever(commentaryRetriever.getLatest(ID)).thenReturn(null)
 
         val result = liveMatchUpdater.retrieveLatest(ID)
@@ -85,7 +85,7 @@ internal class LiveMatchUpdaterTest {
         assertThat(result, `is`(matchFacts))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result!!)
+        verify(liveMatchServiceRepository).save(result!!)
     }
 
     @Test
@@ -93,7 +93,7 @@ internal class LiveMatchUpdaterTest {
         val commentary = Commentary(lastUpdated = LocalDateTime.now().minusSeconds(REFRESH_RATE + 5))
         val matchFacts = MatchFacts(lastUpdated = LocalDateTime.now().minusSeconds(REFRESH_RATE + 5), commentary = commentary)
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(matchFacts)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(matchFacts)
         whenever(matchFactsRetriever.getLatest(ID)).thenReturn(null)
         whenever(commentaryRetriever.getLatest(ID)).thenReturn(null)
 
@@ -103,7 +103,7 @@ internal class LiveMatchUpdaterTest {
         assertThat(result!!.commentary, `is`(commentary))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result)
+        verify(liveMatchServiceRepository).save(result)
     }
 
     @Test
@@ -111,7 +111,7 @@ internal class LiveMatchUpdaterTest {
         val updatedMatch = MatchFacts()
         val commentary = Commentary()
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(null)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(null)
         whenever(matchFactsRetriever.getLatest(ID)).thenReturn(updatedMatch)
         whenever(commentaryRetriever.getLatest(ID)).thenReturn(commentary)
 
@@ -121,7 +121,7 @@ internal class LiveMatchUpdaterTest {
         assertThat(result!!.commentary, `is`(commentary))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result)
+        verify(liveMatchServiceRepository).save(result)
     }
 
     @Test
@@ -132,7 +132,7 @@ internal class LiveMatchUpdaterTest {
         val expectedResult = MatchFacts(lastUpdated = matchFacts.lastUpdated, commentary = null)
         expectedResult.commentary = commentary
 
-        whenever(liveMatchRepository.findById(ID)).thenReturn(matchFacts)
+        whenever(liveMatchServiceRepository.findById(ID)).thenReturn(matchFacts)
         whenever(commentaryRetriever.getLatest(ID)).thenReturn(commentary)
 
         val result = liveMatchUpdater.retrieveLatest(ID)
@@ -141,6 +141,6 @@ internal class LiveMatchUpdaterTest {
         assertThat(result!!.commentary, `is`(commentary))
         verify(matchFactsRetriever).getLatest(any())
         verify(commentaryRetriever).getLatest(any())
-        verify(liveMatchRepository).save(result)
+        verify(liveMatchServiceRepository).save(result)
     }
 }

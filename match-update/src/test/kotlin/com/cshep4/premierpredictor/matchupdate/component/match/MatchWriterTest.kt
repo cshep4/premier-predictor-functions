@@ -3,7 +3,7 @@ package com.cshep4.premierpredictor.matchupdate.component.match
 import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
 import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
-import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository
 import com.nhaarman.mockito_kotlin.verify
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -19,7 +19,7 @@ internal class MatchWriterTest {
     private lateinit var fixtureRepository: FixtureRepository
 
     @Mock
-    private lateinit var liveMatchRepository: LiveMatchRepository
+    private lateinit var liveMatchServiceRepository: LiveMatchServiceRepository
 
     @InjectMocks
     private lateinit var matchWriter: MatchWriter
@@ -41,6 +41,6 @@ internal class MatchWriterTest {
         val result = matchWriter.matchFacts(matchFacts)
 
         assertThat(result, `is`(matchFacts))
-        verify(liveMatchRepository).save(matchFacts)
+        verify(liveMatchServiceRepository).save(matchFacts)
     }
 }

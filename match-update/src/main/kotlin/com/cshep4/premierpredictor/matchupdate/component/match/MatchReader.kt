@@ -7,7 +7,7 @@ import com.cshep4.premierpredictor.matchupdate.data.PredictedMatch
 import com.cshep4.premierpredictor.matchupdate.extensions.isToday
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNullOrEmpty
 import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
-import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -17,7 +17,7 @@ class MatchReader {
     private lateinit var fixtureRepository: FixtureRepository
 
     @Autowired
-    private lateinit var liveMatchRepository: LiveMatchRepository
+    private lateinit var liveMatchServiceRepository: LiveMatchServiceRepository
 
     @Autowired
     private lateinit var predictionReader: PredictionReader
@@ -40,6 +40,6 @@ class MatchReader {
         return predictionMerger.merge(matches, predictions)
     }
 
-    fun getAllMatchIds(): List<String?> = liveMatchRepository.findAll()
+    fun getAllMatchIds(): List<String?> = liveMatchServiceRepository.findAll()
             .map { it.id }
 }

@@ -6,7 +6,7 @@ import com.cshep4.premierpredictor.matchupdate.data.Match
 import com.cshep4.premierpredictor.matchupdate.data.Prediction
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
 import com.cshep4.premierpredictor.matchupdate.repository.mongo.FixtureRepository
-import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository
 import com.nhaarman.mockito_kotlin.whenever
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -29,7 +29,7 @@ internal class MatchReaderTest {
     private lateinit var fixtureRepository: FixtureRepository
 
     @Mock
-    private lateinit var liveMatchRepository: LiveMatchRepository
+    private lateinit var liveMatchServiceRepository: LiveMatchServiceRepository
 
     @InjectMocks
     private lateinit var matchReader: MatchReader
@@ -97,7 +97,7 @@ internal class MatchReaderTest {
         val matches = listOf(MatchFacts(id = "1"), MatchFacts(id = "22"))
         val ids = matches.map { it.id }
 
-        whenever(liveMatchRepository.findAll()).thenReturn(matches)
+        whenever(liveMatchServiceRepository.findAll()).thenReturn(matches)
 
         val result = matchReader.getAllMatchIds()
 

@@ -4,7 +4,7 @@ import com.cshep4.premierpredictor.matchupdate.component.update.CommentaryRetrie
 import com.cshep4.premierpredictor.matchupdate.component.update.MatchFactsRetriever
 import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Commentary
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchRepository
+import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 class LiveMatchUpdater {
     @Autowired
-    private lateinit var liveMatchRepository: LiveMatchRepository
+    private lateinit var liveMatchServiceRepository: LiveMatchServiceRepository
 
     @Autowired
     private lateinit var matchFactsRetriever: MatchFactsRetriever
@@ -23,7 +23,7 @@ class LiveMatchUpdater {
     private lateinit var commentaryRetriever: CommentaryRetriever
 
     fun retrieveLatest(id: String): MatchFacts? {
-        val storedMatch = liveMatchRepository
+        val storedMatch = liveMatchServiceRepository
                 .findById(id)
 
         return updateMatchFacts(storedMatch, id)
@@ -52,7 +52,7 @@ class LiveMatchUpdater {
             else -> updatedCommentary
         }
 
-        liveMatchRepository.save(matchFacts)
+        liveMatchServiceRepository.save(matchFacts)
 
         return matchFacts
     }

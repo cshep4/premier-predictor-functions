@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	. "github.com/ahl5esoft/golang-underscore"
 	"log"
 	. "premier-predictor-functions/common/api"
@@ -8,6 +9,7 @@ import (
 	. "premier-predictor-functions/common/domain"
 	. "premier-predictor-functions/common/redis"
 	"premier-predictor-functions/common/redis/interfaces"
+	"time"
 )
 
 type LiveMatchCheckService struct {
@@ -72,6 +74,16 @@ func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 	return true
 }
 
-var isPlayingOrAboutToStart = func(m MatchFacts, _ int) bool { return m.IsPlaying() || m.IsAboutToStart() }
+var isPlayingOrAboutToStart = func(m MatchFacts, _ int) bool { return isValidDateTime(m) && (m.IsPlaying() || m.IsAboutToStart()) }
 var mapToLiveMatch = func(m MatchFacts, _ int) LiveMatch { return m.ToLiveMatch() }
 var isNotNil = func(e error, _ int) bool { return e != nil }
+
+var isValidDateTime = func(m MatchFacts) bool {
+	dateTime := fmt.Sprintf("%sT%s", m.FormattedDate, m.Time)
+	_, err := time.Parse("02.01.2006T15:04", dateTime)
+	if err != nil {
+		return false
+	}
+
+	return true
+}

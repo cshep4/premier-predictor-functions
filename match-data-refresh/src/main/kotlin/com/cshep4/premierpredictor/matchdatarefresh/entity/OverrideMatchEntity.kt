@@ -8,7 +8,7 @@ import javax.persistence.*
 data class OverrideMatchEntity (
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        val id: Long = 0,
+        val id: String = "",
         var hGoals: Int? = null,
         var aGoals: Int? = null
 ){

@@ -2,7 +2,6 @@ package service
 
 import (
 	. "github.com/ahl5esoft/golang-underscore"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
 	. "premier-predictor-functions/common/api"
 	iface "premier-predictor-functions/common/api/interfaces"
@@ -59,7 +58,7 @@ func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 	liveMatches := Map(playingMatches, mapToLiveMatch).([]LiveMatch)
 
 	var saveErrs []error
-	Each(liveMatches, func (m LiveMatch, _ int) {
+	Each(liveMatches, func(m LiveMatch, _ int) {
 		err := l.redis.SetLiveMatch(m)
 		saveErrs = append(saveErrs, err)
 	})

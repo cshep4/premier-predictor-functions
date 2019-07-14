@@ -4,32 +4,32 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Event(
 		@JsonProperty("id")
-		val id: String? = null,
+		var id: String? = null,
 
 		@JsonProperty("type")
-		val type: String? = null,
+		var type: String? = null,
 
 		@JsonProperty("result")
-		val result: String? = null,
+		var result: String? = null,
 
 		@JsonProperty("minute")
-		val minute: String? = null,
+		var minute: String? = null,
 
 		@JsonProperty("extra_min")
-		val extraMin: String? = null,
+		var extraMin: String? = null,
 
 		@JsonProperty("team")
-		val team: String? = null,
+		var team: String? = null,
 
 		@JsonProperty("player")
-		val player: String? = null,
+		var player: String? = null,
 
 		@JsonProperty("player_id")
-		val playerId: String? = null,
+		var playerId: String? = null,
 
 		@JsonProperty("assist")
-		val assist: String? = null,
+		var assist: String? = null,
 
 		@JsonProperty("assist_id")
-		val assistId: String? = null
+		var assistId: String? = null
 )

@@ -4,22 +4,22 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Lineup(
         @JsonProperty("localteam")
-        val localTeam: List<Position>? = null,
+        var localTeam: List<Position>? = null,
 
         @JsonProperty("visitorteam")
-        val visitorTeam: List<Position>? = null
+        var visitorTeam: List<Position>? = null
 )
 
 data class Position(
         @JsonProperty("id")
-        val id: String? = null,
+        var id: String? = null,
 
         @JsonProperty("number")
-        val number: String? = null,
+        var number: String? = null,
 
         @JsonProperty("name")
-        val name: String? = null,
+        var name: String? = null,
 
         @JsonProperty("pos")
-        val pos: String? = null
+        var pos: String? = null
 )

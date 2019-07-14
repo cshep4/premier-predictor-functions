@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component
 @Component
 class ApiRequester {
     companion object {
-        const val FROM_DATE: String = "2018-08-10"
-        const val TO_DATE: String = "2019-05-20"
+        const val FROM_DATE: String = "2019-08-08"
+        const val TO_DATE: String = "2020-05-18"
         const val COMP_ID: String = "1204"
     }
 

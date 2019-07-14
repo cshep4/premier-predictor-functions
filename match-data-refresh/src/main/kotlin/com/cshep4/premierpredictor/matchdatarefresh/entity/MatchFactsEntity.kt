@@ -1,30 +1,24 @@
 package com.cshep4.premierpredictor.matchdatarefresh.entity
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBIgnore
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTypeConverted
 import com.cshep4.premierpredictor.matchdatarefresh.data.commentary.Commentary
 import com.cshep4.premierpredictor.matchdatarefresh.data.match.Event
 import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
-import com.cshep4.premierpredictor.matchdatarefresh.utils.CommentaryConverter
-import com.cshep4.premierpredictor.matchdatarefresh.utils.LocalDateTimeConverter
-import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchEventsConverter
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.correctStatus
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.getFullTeamName
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.sanitiseScore
+import com.fasterxml.jackson.annotation.JsonIgnore
+import org.bson.codecs.pojo.annotations.BsonIgnore
 import org.springframework.data.annotation.Id
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
-@DynamoDBTable(tableName = "Match")
 data class MatchFactsEntity(
         @Id
-        @DynamoDBHashKey
         var id: String? = null,
 
         var penaltyVisitor: String? = null,
@@ -67,25 +61,16 @@ data class MatchFactsEntity(
 
         var venueId: String? = null,
 
-        @DynamoDBTypeConverted( converter = MatchEventsConverter::class )
         var events: List<Event>? = null,
 
         var status: String? = null,
 
-        @DynamoDBTypeConverted( converter = CommentaryConverter::class )
         var commentary: Commentary? = null,
 
-        @DynamoDBTypeConverted( converter = LocalDateTimeConverter::class )
-        var lastUpdated: LocalDateTime? = LocalDateTime.now(Clock.systemUTC())
+        var lastUpdated: LocalDateTime? = LocalDateTime.now(Clock.systemUTC()),
+
+        var matchDate: LocalDate? = null
 ){
-    @DynamoDBIgnore
-    fun getDateTime(): LocalDateTime? {
-        val time = LocalTime.parse(this.time)
-        val date = LocalDate.parse(this.formattedDate, DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH))
-
-        return LocalDateTime.of(date, time)
-    }
-
     fun toDto(): MatchFacts = MatchFacts(
             penaltyVisitor = this.penaltyVisitor,
             venue = this.venue,
@@ -139,6 +124,17 @@ data class MatchFactsEntity(
                 events = dto.events,
                 status = correctStatus(dto.status),
                 commentary = dto.commentary,
-                lastUpdated = dto.lastUpdated)
+                lastUpdated = dto.lastUpdated,
+                matchDate = toMatchDate(dto.formattedDate))
+
+        private fun toMatchDate(formattedDate: String?): LocalDate? {
+            formattedDate ?: return null
+
+            return try {
+                LocalDate.parse(formattedDate, DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.ENGLISH))
+            } catch (e: DateTimeParseException) {
+                null
+            }
+        }
     }
 }

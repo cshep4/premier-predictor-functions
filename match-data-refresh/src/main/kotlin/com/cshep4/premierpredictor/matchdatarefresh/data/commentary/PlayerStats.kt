@@ -4,69 +4,69 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class PlayerStats(
         @JsonProperty("localteam")
-        val localTeam: Players? = null,
+        var localTeam: Players? = null,
 
         @JsonProperty("visitorteam")
-        val visitorTeam: Players? = null
+        var visitorTeam: Players? = null
 )
 
 data class Players(
         @JsonProperty("player")
-        val player: List<Player>? = null
+        var player: List<Player>? = null
 )
 
 data class Player(
         @JsonProperty("id")
-        val id: String? = null,
+        var id: String? = null,
 
         @JsonProperty("num")
-        val num: String? = null,
+        var num: String? = null,
 
         @JsonProperty("name")
-        val name: String? = null,
+        var name: String? = null,
 
         @JsonProperty("pos")
-        val pos: String? = null,
+        var pos: String? = null,
 
         @JsonProperty("posx")
-        val posX: String? = null,
+        var posX: String? = null,
 
         @JsonProperty("posy")
-        val posY: String? = null,
+        var posY: String? = null,
 
         @JsonProperty("shots_total")
-        val shotsTotal: String? = null,
+        var shotsTotal: String? = null,
 
         @JsonProperty("shots_on_goal")
-        val shotsOnGoal: String? = null,
+        var shotsOnGoal: String? = null,
 
         @JsonProperty("goals")
-        val goals: String? = null,
+        var goals: String? = null,
 
         @JsonProperty("assists")
-        val assists: String? = null,
+        var assists: String? = null,
 
         @JsonProperty("offsides")
-        val offsides: String? = null,
+        var offsides: String? = null,
 
         @JsonProperty("fouls_drawn")
-        val foulsDrawn: String? = null,
+        var foulsDrawn: String? = null,
 
         @JsonProperty("fouls_committed")
-        val foulsCommitted: String? = null,
+        var foulsCommitted: String? = null,
 
         @JsonProperty("saves")
-        val saves: String? = null,
+        var saves: String? = null,
 
         @JsonProperty("yellowcards")
-        val yellowCards: String? = null,
+        var yellowCards: String? = null,
 
         @JsonProperty("redcards")
-        val redCards: String? = null,
+        var redCards: String? = null,
 
         @JsonProperty("pen_score")
-        val penScore: String? = null,
+        var penScore: String? = null,
 
         @JsonProperty("pen_miss")
-        val penMiss: String? = null
+        var penMiss: String? = null
 )

@@ -18,12 +18,6 @@ internal class MatchUpdaterTest {
     @Mock
     private lateinit var matchWriter: MatchWriter
 
-    @Mock
-    private lateinit var overrideMatchRetriever: OverrideMatchRetriever
-
-    @Mock
-    private lateinit var matchOverrider: MatchOverrider
-
     @InjectMocks
     private lateinit var matchUpdater: MatchUpdater
 
@@ -33,15 +27,10 @@ internal class MatchUpdaterTest {
         matchFacts[0].setDateTime(LocalDateTime.now())
 
         val matches = matchFacts.map { it.toMatch() }
-        val overrides = listOf(OverrideMatch())
 
         whenever(matchWriter.update(matches)).thenReturn(matches)
-        whenever(overrideMatchRetriever.findAll()).thenReturn(overrides)
-        whenever(matchOverrider.update(matches, overrides)).thenReturn(matches)
 
         val result = matchUpdater.update(matchFacts)
-
-        verify(matchOverrider).update(matches, overrides)
 
         assertThat(result, `is`(matches))
     }

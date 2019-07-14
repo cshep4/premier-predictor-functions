@@ -4,28 +4,28 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Substitutions(
         @JsonProperty("localteam")
-        val localTeam: List<Substitution>? = null,
+        var localTeam: List<Substitution>? = null,
 
         @JsonProperty("visitorteam")
-        val visitorTeam: List<Substitution>? = null
+        var visitorTeam: List<Substitution>? = null
 )
 
 data class Substitution(
         @JsonProperty("off_name")
-        val offName: String? = null,
+        var offName: String? = null,
 
         @JsonProperty("on_name")
-        val onName: String? = null,
+        var onName: String? = null,
 
         @JsonProperty("off_id")
-        val offId: String? = null,
+        var offId: String? = null,
 
         @JsonProperty("on_id")
-        val onId: String? = null,
+        var onId: String? = null,
 
         @JsonProperty("minute")
-        val minute: String? = null,
+        var minute: String? = null,
 
         @JsonProperty("table_id")
-        val tableId: String? = null
+        var tableId: String? = null
 )

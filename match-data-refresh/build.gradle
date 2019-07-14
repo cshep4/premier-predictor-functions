@@ -103,10 +103,10 @@ dependencies {
 	implementation 'com.github.kittinunf.fuel:fuel:1.15.1'
 	compile 'com.sendgrid:sendgrid-java:4.0.1'
 	compile 'javax.xml.bind:jaxb-api:2.3.0'
-	compile group: 'org.postgresql', name: 'postgresql', version: '42.1.1'
-	compile group: 'com.amazonaws', name: 'aws-java-sdk-dynamodb', version: '1.11.251'
-	compile group: 'com.github.spring-data-dynamodb', name: 'spring-data-dynamodb', version: '5.0.2'
 	compile group: 'com.amazonaws', name: 'aws-java-sdk-sns'
+	compile group: 'org.mongodb', name: 'mongodb-driver-sync', version: '3.10.1'
+	compile 'org.mongodb:mongodb-driver-core:3.10.1'
+	compile 'org.mongodb:bson:3.10.1'
 
 	runtime('mysql:mysql-connector-java')
 

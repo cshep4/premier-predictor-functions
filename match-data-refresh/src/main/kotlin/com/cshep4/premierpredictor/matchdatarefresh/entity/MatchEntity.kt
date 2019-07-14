@@ -2,15 +2,11 @@ package com.cshep4.premierpredictor.matchdatarefresh.entity
 
 import com.cshep4.premierpredictor.matchdatarefresh.data.Match
 import java.time.LocalDateTime
-import javax.persistence.Entity
 import javax.persistence.Id
-import javax.persistence.Table
 
-@Entity
-@Table(name = "Match")
 data class MatchEntity (
         @Id
-        val id: Long = 0,
+        var id: String = "",
         var hTeam: String = "",
         var aTeam: String = "",
         var hGoals: Int? = null,

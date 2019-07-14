@@ -9,12 +9,6 @@ import org.springframework.stereotype.Component
 @Component
 class MatchUpdater {
     @Autowired
-    private lateinit var overrideMatchRetriever: OverrideMatchRetriever
-
-    @Autowired
-    private lateinit var matchOverrider: MatchOverrider
-
-    @Autowired
     private lateinit var matchWriter: MatchWriter
 
     fun update(matchFacts: List<MatchFacts>): List<Match> {
@@ -24,10 +18,6 @@ class MatchUpdater {
 
         val matches = matchFacts.map { it.toMatch() }
 
-        val overrides = overrideMatchRetriever.findAll()
-
-        val overriddenMatches = matchOverrider.update(matches, overrides)
-
-        return matchWriter.update(overriddenMatches)
+        return matchWriter.update(matches)
     }
 }

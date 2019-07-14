@@ -45,9 +45,13 @@ class DataUpdater {
     }
 
     private fun validateDateTime(match: MatchFacts): MatchFacts {
+        if (match.time == "TBA") {
+            match.time = "15:00"
+        }
+
         return try {
             if (match.getDateTime()!!.isToday() && match.status == "Postp.") {
-                match.formattedDate = "01.06.2019"
+                match.formattedDate = "01.06.2020"
                 match.time = "12:00"
                 match.status = ""
             } else if (match.status == "Postp.") {
@@ -56,7 +60,7 @@ class DataUpdater {
 
             match
         } catch (e: DateTimeParseException) {
-            match.formattedDate = "01.06.2019"
+            match.formattedDate = "01.06.2020"
             match.time = "12:00"
 
             match

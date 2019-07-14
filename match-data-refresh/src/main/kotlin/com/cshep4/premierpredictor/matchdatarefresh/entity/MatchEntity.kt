@@ -1,11 +1,11 @@
 package com.cshep4.premierpredictor.matchdatarefresh.entity
 
 import com.cshep4.premierpredictor.matchdatarefresh.data.Match
+import org.bson.codecs.pojo.annotations.BsonProperty
 import java.time.LocalDateTime
-import javax.persistence.Id
 
 data class MatchEntity (
-        @Id
+        @BsonProperty("_id")
         var id: String = "",
         var hTeam: String = "",
         var aTeam: String = "",

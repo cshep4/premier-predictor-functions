@@ -6,19 +6,16 @@ import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.correctStatus
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.getFullTeamName
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.sanitiseScore
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.bson.codecs.pojo.annotations.BsonIgnore
-import org.springframework.data.annotation.Id
+import org.bson.codecs.pojo.annotations.BsonProperty
 import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.util.*
 
 data class MatchFactsEntity(
-        @Id
+        @BsonProperty("_id")
         var id: String? = null,
 
         var penaltyVisitor: String? = null,

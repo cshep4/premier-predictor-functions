@@ -11,6 +11,7 @@ import com.mongodb.client.model.FindOneAndUpdateOptions
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -20,6 +21,7 @@ class FixtureRepository {
         const val COLLECTION = "fixtures"
     }
 
+    @Autowired
     private lateinit var client: MongoClient
 
     private fun database(): MongoDatabase {

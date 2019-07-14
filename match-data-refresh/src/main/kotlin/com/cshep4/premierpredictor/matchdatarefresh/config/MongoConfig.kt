@@ -37,7 +37,7 @@ class MongoConfig {
     fun mongo(): MongoClient {
         var mongoUri = "$mongoScheme://$mongoUsername:$mongoPassword@$mongoHost"
 
-        if (isEmpty(mongoPort)) {
+        if (!isEmpty(mongoPort)) {
             mongoUri += ":$mongoPort"
         }
 

@@ -5,11 +5,11 @@ import (
 	. "github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	"log"
-	. "premier-predictor-functions/common/factory"
-	"premier-predictor-functions/common/response"
-	"premier-predictor-functions/send-message/domain"
-	. "premier-predictor-functions/send-message/factory"
-	"premier-predictor-functions/send-message/service/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/factory"
+	"github.com/cshep4/premier-predictor-functions/common/response"
+	"github.com/cshep4/premier-predictor-functions/send-message/domain"
+	. "github.com/cshep4/premier-predictor-functions/send-message/factory"
+	"github.com/cshep4/premier-predictor-functions/send-message/service/interfaces"
 )
 
 var messageServiceFactory ServiceFactory

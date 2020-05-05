@@ -2,8 +2,8 @@ package service
 
 import (
 	"github.com/stretchr/testify/assert"
-	. "premier-predictor-functions/common/domain"
-	"premier-predictor-functions/common/redis/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	"github.com/cshep4/premier-predictor-functions/common/redis/mock"
 	"testing"
 )
 

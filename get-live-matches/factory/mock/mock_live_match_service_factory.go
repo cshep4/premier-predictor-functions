@@ -2,9 +2,9 @@ package mock
 
 import (
 	. "github.com/stretchr/testify/mock"
-	. "premier-predictor-functions/common/domain"
-	. "premier-predictor-functions/common/service"
-	"premier-predictor-functions/get-live-matches/service/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/service"
+	"github.com/cshep4/premier-predictor-functions/get-live-matches/service/mock"
 )
 
 type LiveMatchServiceFactory struct {

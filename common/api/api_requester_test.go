@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	. "net/http"
-	. "premier-predictor-functions/common/domain"
-	"premier-predictor-functions/common/http/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	"github.com/cshep4/premier-predictor-functions/common/http/mock"
 	"testing"
 )
 

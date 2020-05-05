@@ -4,11 +4,11 @@ import (
 	"fmt"
 	. "github.com/ahl5esoft/golang-underscore"
 	"log"
-	. "premier-predictor-functions/common/api"
-	iface "premier-predictor-functions/common/api/interfaces"
-	. "premier-predictor-functions/common/domain"
-	. "premier-predictor-functions/common/redis"
-	"premier-predictor-functions/common/redis/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/api"
+	iface "github.com/cshep4/premier-predictor-functions/common/api/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/redis"
+	"github.com/cshep4/premier-predictor-functions/common/redis/interfaces"
 	"time"
 )
 
@@ -50,9 +50,19 @@ func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 		return false
 	}
 
-	playingMatches, ok := Where(matchFacts, isPlayingOrAboutToStart).([]MatchFacts)
+	var playingMatches []MatchFacts
+	for _, m := range matchFacts {
+		playing, err := isPlayingOrAboutToStart(m)
+		if err != nil {
+			log.Println("error checking matches - " + err.Error())
+			return true
+		}
+		if playing {
+			playingMatches = append(playingMatches, m)
+		}
+	}
 
-	if !ok || len(playingMatches) < 1 {
+	if len(playingMatches) < 1 {
 		log.Println("No matches playing")
 		return true
 	}
@@ -74,7 +84,6 @@ func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 	return true
 }
 
-var isPlayingOrAboutToStart = func(m MatchFacts, _ int) bool { return isValidDateTime(m) && (m.IsPlaying() || m.IsAboutToStart()) }
 var mapToLiveMatch = func(m MatchFacts, _ int) LiveMatch { return m.ToLiveMatch() }
 var isNotNil = func(e error, _ int) bool { return e != nil }
 
@@ -86,4 +95,26 @@ var isValidDateTime = func(m MatchFacts) bool {
 	}
 
 	return true
+}
+
+func isPlayingOrAboutToStart(m MatchFacts) (bool, error) {
+	today, err := isMatchToday(m)
+	if err != nil {
+		return false, err
+	}
+
+	return m.Id != "2618715" && today && isValidDateTime(m) && (m.IsPlaying() || m.IsAboutToStart()), nil
+}
+
+func isMatchToday(m MatchFacts) (bool, error) {
+	dateTime := fmt.Sprintf("%sT%s", m.FormattedDate, m.Time)
+	matchTime, err := time.Parse("02.01.2006T15:04", dateTime)
+	if err != nil {
+		return false, err
+	}
+
+	y1, m1, d1 := matchTime.Date()
+	y2, m2, d2 := time.Now().Date()
+
+	return y1 == y2 && m1 == m2 && d1 == d2, nil
 }

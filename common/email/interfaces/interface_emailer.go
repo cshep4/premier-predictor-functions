@@ -1,6 +1,6 @@
 package interfaces
 
-import . "premier-predictor-functions/common/domain"
+import . "github.com/cshep4/premier-predictor-functions/common/domain"
 
 type Emailer interface {
 	Send(args *EmailArgs) error

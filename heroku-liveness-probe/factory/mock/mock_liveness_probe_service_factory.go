@@ -2,8 +2,8 @@ package mock
 
 import (
 	. "github.com/stretchr/testify/mock"
-	. "premier-predictor-functions/common/service"
-	"premier-predictor-functions/heroku-liveness-probe/service/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/service"
+	"github.com/cshep4/premier-predictor-functions/heroku-liveness-probe/service/mock"
 )
 
 type LivenessProbeServiceFactory struct {

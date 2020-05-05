@@ -2,7 +2,7 @@ package mock
 
 import (
 	"github.com/stretchr/testify/mock"
-	. "premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
 )
 
 type Emailer struct {

@@ -1,9 +1,9 @@
 package redis
 
 import (
-	"github.com/mediocregopher/radix"
+	"github.com/mediocregopher/radix/v3"
 	"os"
-	"premier-predictor-functions/common/util"
+	"github.com/cshep4/premier-predictor-functions/common/util"
 	"time"
 )
 

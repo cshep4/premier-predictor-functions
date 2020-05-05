@@ -29,34 +29,39 @@ provider:
     SEND_GRID_API_KEY: ${self:custom.secrets.sendgridApiKey}
     PHONE_NUMBER: ${self:custom.secrets.phoneNumber}
     MESSENGER_CLIENT_URL: ${self:custom.secrets.messengerClientUrl}
+    MONGO_SCHEME: ${self:custom.secrets.mongoScheme}
+    MONGO_USERNAME: ${self:custom.secrets.mongoUsername}
+    MONGO_PASSWORD: ${self:custom.secrets.mongoPassword}
+    MONGO_HOST: ${self:custom.secrets.mongoHost}
+    MONGO_PORT: ${self:custom.secrets.mongoPort}
 
 package:
  exclude:
    - common/**
+   - data-retriever/**
    - match-update/**
+   - user-score-updater/**
    - match-data-refresh/**
    - live-match-check/**
+   - send-email/**
    - score-update/**
    - get-live-matches/**
    - fixture-update/**
    - heroku-liveness-probe/**
-   - test-kotlin-quarkus/**
-   - message-builder/**
+   - screenshots/**
+   - send-message/**
  include:
    - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
+   - user-score-updater/build/libs/user-score-updater-0.0.1-SNAPSHOT-aws.jar
    - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
    - live-match-check/bin/**
+   - send-email/bin/**
+   - send-message/bin/**
    - score-update/bin/**
    - get-live-matches/bin/**
    - heroku-liveness-probe/bin/**
-   - message-builder/build/package/bundle.zip
 
 functions:
-  # fixture-update:
-  #   runtime: nodejs8.10
-  #   handler: fixture-update/index.handler
-  #   events:
-  #     - schedule: cron(0 3 ? * * *)
   match-update:
     runtime: java8
     memorySize: 1592
@@ -68,6 +73,21 @@ functions:
       artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
     events:
       - schedule: rate(1 minute)
+  user-score-updater:
+    runtime: java8
+    memorySize: 1592
+    timeout: 60
+    handler: com.cshep4.premierpredictor.userscoreupdater.handler.aws.UserScoreUpdaterHandler
+    environment:
+      FUNCTION_NAME: userScoreUpdater
+    package:
+      artifact: user-score-updater/build/libs/user-score-updater-0.0.1-SNAPSHOT-aws.jar
+    events:
+      - http:
+          path: user/score
+          resp: http
+          method: put
+          cors: true
   match-data-refresh:
     runtime: java8
     memorySize: 2048
@@ -84,6 +104,21 @@ functions:
     handler: live-match-check/bin/main
     events:
       - schedule: rate(5 minutes)
+  send-email:
+    runtime: go1.x
+    handler: send-email/bin/sqs/main
+    reservedConcurrency: 10
+    events:
+      - sqs: arn:aws:sqs:us-east-1:925427442847:SendEmail
+  send-email-http:
+    runtime: go1.x
+    handler: send-email/bin/http/main
+    events:
+      - http:
+          path: email
+          resp: http
+          method: post
+          cors: true
   score-update:
     runtime: go1.x
     timeout: 60
@@ -129,32 +164,16 @@ functions:
           resp: http
           method: post
           cors: true
-  heroku-liveness-probe:
-    runtime: go1.x
-    handler: heroku-liveness-probe/bin/main
-    environment:
-      HEROKU_API_KEY: ${self:custom.secrets.herokuApiKey}
-      HEROKU_HEALTH_URL: ${self:custom.secrets.herokuHealthUrl}
-    events:
-      - schedule: rate(1 minute)
-  message-builder:
-    handler: not.used
-    package:
-      artifact: message-builder/build/package/bundle.zip
-    runtime: provided
-    events:
-      - http:
-          path: /message/build
-          method: post
-#  test-kotlin-quarkus:
-#    handler: not.used
-#    package:
-#      artifact: test-kotlin-quarkus/build/package/bundle.zip
-#    runtime: provided
+#   fixture-update:
+#     runtime: nodejs8.10
+#     handler: fixture-update/index.handler
+#     events:
+#       - schedule: cron(0 3 ? * * *)
+#  heroku-liveness-probe:
+#    runtime: go1.x
+#    handler: heroku-liveness-probe/bin/main
+#    environment:
+#      HEROKU_API_KEY: ${self:custom.secrets.herokuApiKey}
+#      HEROKU_HEALTH_URL: ${self:custom.secrets.herokuHealthUrl}
 #    events:
-#      - http:
-#          path: /ping
-#          method: get
-#      - http:
-#          path: /greet/{name}
-#          method: get
+#      - schedule: rate(1 minute)

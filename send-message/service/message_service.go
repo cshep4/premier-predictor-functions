@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 	"os"
-	. "premier-predictor-functions/common/http"
-	"premier-predictor-functions/common/http/interfaces"
-	"premier-predictor-functions/send-message/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/http"
+	"github.com/cshep4/premier-predictor-functions/common/http/interfaces"
+	"github.com/cshep4/premier-predictor-functions/send-message/domain"
 )
 
 type MessageService struct {

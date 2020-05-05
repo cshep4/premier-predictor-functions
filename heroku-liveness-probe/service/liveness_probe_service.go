@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	. "premier-predictor-functions/common/http"
-	. "premier-predictor-functions/common/messenger"
+	. "github.com/cshep4/premier-predictor-functions/common/http"
+	. "github.com/cshep4/premier-predictor-functions/common/messenger"
 	"time"
 )
 

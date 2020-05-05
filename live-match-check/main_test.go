@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	"premier-predictor-functions/live-match-check/factory"
-	. "premier-predictor-functions/live-match-check/factory/mock"
+	"github.com/cshep4/premier-predictor-functions/live-match-check/factory"
+	. "github.com/cshep4/premier-predictor-functions/live-match-check/factory/mock"
 	"testing"
 )
 

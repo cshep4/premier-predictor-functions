@@ -16,6 +16,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.util.*
 
 data class MatchFacts(
@@ -135,6 +136,17 @@ data class MatchFacts(
 			status = correctStatus(this.status),
 			commentary = this.commentary,
 			lastUpdated = this.lastUpdated)
+
+	@JsonIgnore
+	fun wasRescheduled(): Boolean {
+		return try {
+			getDateTime()
+
+			status in arrayOf("Postp.", "Cancl.", "Awarded", "Aban.")
+		} catch (e: DateTimeParseException) {
+			true
+		}
+	}
 
 	@JsonIgnore
 	fun getDateTime(): LocalDateTime? {

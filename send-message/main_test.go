@@ -6,9 +6,9 @@ import (
 	. "github.com/aws/aws-lambda-go/events"
 	"github.com/stretchr/testify/assert"
 	"log"
-	"premier-predictor-functions/send-message/domain"
-	"premier-predictor-functions/send-message/factory"
-	. "premier-predictor-functions/send-message/factory/mock"
+	"github.com/cshep4/premier-predictor-functions/send-message/domain"
+	"github.com/cshep4/premier-predictor-functions/send-message/factory"
+	. "github.com/cshep4/premier-predictor-functions/send-message/factory/mock"
 	"testing"
 )
 

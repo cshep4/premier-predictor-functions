@@ -1,9 +1,9 @@
 package service
 
 import (
-	. "premier-predictor-functions/common/domain"
-	. "premier-predictor-functions/common/redis"
-	"premier-predictor-functions/common/redis/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/redis"
+	"github.com/cshep4/premier-predictor-functions/common/redis/interfaces"
 )
 
 type LiveMatchService struct {

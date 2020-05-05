@@ -1,10 +1,11 @@
 package redis
 
 import (
-	"github.com/mediocregopher/radix"
+	"fmt"
+	"github.com/mediocregopher/radix/v3"
 	"log"
-	. "premier-predictor-functions/common/domain"
-	"premier-predictor-functions/common/util"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	"github.com/cshep4/premier-predictor-functions/common/util"
 	. "time"
 )
 
@@ -95,6 +96,23 @@ func (r Repository) SetScoresUpdated() error {
 
 func (r Repository) addToSetOfIds(key string, value string) error {
 	return r.redis.Do(radix.FlatCmd(nil, ADD_TO_SET, key, value))
+}
+
+func (r Repository) SetIdempotency(key string) error {
+	k := fmt.Sprintf(IDEMPOTENCY, key)
+	return r.redis.Do(radix.FlatCmd(nil, SET_WITH_TTL, k, FOUR_DAYS, key))
+}
+
+func (r Repository) CheckIdempotency(key string) (bool, error) {
+	k := fmt.Sprintf(IDEMPOTENCY, key)
+
+	var value string
+	err := r.redis.Do(radix.Cmd(&value, GET, k))
+	if err != nil {
+		return false, err
+	}
+
+	return value != "", nil
 }
 
 func (r Repository) Flush() error {

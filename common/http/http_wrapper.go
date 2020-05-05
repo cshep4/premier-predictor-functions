@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	. "net/http"
-	"premier-predictor-functions/common/util"
+	"github.com/cshep4/premier-predictor-functions/common/util"
 	"time"
 )
 

@@ -3,11 +3,11 @@ package main
 import (
 	. "github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	. "premier-predictor-functions/common/factory"
-	"premier-predictor-functions/common/response"
-	. "premier-predictor-functions/score-update/constant"
-	. "premier-predictor-functions/score-update/factory"
-	"premier-predictor-functions/score-update/service/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/factory"
+	"github.com/cshep4/premier-predictor-functions/common/response"
+	. "github.com/cshep4/premier-predictor-functions/score-update/constant"
+	. "github.com/cshep4/premier-predictor-functions/score-update/factory"
+	"github.com/cshep4/premier-predictor-functions/score-update/service/interfaces"
 )
 
 var scoreUpdateServiceFactory ServiceFactory

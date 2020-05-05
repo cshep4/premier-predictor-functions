@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	. "net/http"
 	"os"
-	. "premier-predictor-functions/common/domain"
-	. "premier-predictor-functions/common/http"
-	"premier-predictor-functions/common/http/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/http"
+	"github.com/cshep4/premier-predictor-functions/common/http/interfaces"
 	"time"
 )
 

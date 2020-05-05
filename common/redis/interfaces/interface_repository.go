@@ -1,7 +1,7 @@
 package interfaces
 
 import (
-	. "premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
 	. "time"
 )
 
@@ -11,6 +11,8 @@ type RedisRepository interface {
 	SetLiveMatch(liveMatch LiveMatch) error
 	GetScoresUpdated() Time
 	SetScoresUpdated() error
+	SetIdempotency(key string) error
+	CheckIdempotency(key string) (bool, error)
 	Flush() error
 	Close()
 }

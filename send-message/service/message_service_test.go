@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
-	"premier-predictor-functions/common/http/mock"
-	"premier-predictor-functions/send-message/domain"
+	"github.com/cshep4/premier-predictor-functions/common/http/mock"
+	"github.com/cshep4/premier-predictor-functions/send-message/domain"
 	"testing"
 )
 

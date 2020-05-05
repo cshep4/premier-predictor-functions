@@ -1,6 +1,6 @@
 package factory
 
-import . "premier-predictor-functions/common/service"
+import . "github.com/cshep4/premier-predictor-functions/common/service"
 
 type ServiceFactory interface {
 	Create() Service

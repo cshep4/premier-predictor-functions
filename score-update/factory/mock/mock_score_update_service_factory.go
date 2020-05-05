@@ -2,8 +2,8 @@ package mock
 
 import (
 	. "github.com/stretchr/testify/mock"
-	. "premier-predictor-functions/common/service"
-	"premier-predictor-functions/score-update/service/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/service"
+	"github.com/cshep4/premier-predictor-functions/score-update/service/mock"
 )
 
 type ScoreUpdateServiceFactory struct {

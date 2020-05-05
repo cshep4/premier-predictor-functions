@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	. "github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	. "premier-predictor-functions/common/factory"
-	"premier-predictor-functions/common/response"
-	"premier-predictor-functions/common/util"
-	. "premier-predictor-functions/get-live-matches/factory"
-	"premier-predictor-functions/get-live-matches/service/interfaces"
+	. "github.com/cshep4/premier-predictor-functions/common/factory"
+	"github.com/cshep4/premier-predictor-functions/common/response"
+	"github.com/cshep4/premier-predictor-functions/common/util"
+	. "github.com/cshep4/premier-predictor-functions/get-live-matches/factory"
+	"github.com/cshep4/premier-predictor-functions/get-live-matches/service/interfaces"
 )
 
 var liveMatchServiceFactory ServiceFactory

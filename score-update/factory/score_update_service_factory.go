@@ -1,8 +1,8 @@
 package factory
 
 import (
-	. "premier-predictor-functions/common/service"
-	. "premier-predictor-functions/score-update/service"
+	. "github.com/cshep4/premier-predictor-functions/common/service"
+	. "github.com/cshep4/premier-predictor-functions/score-update/service"
 )
 
 type ScoreUpdateServiceFactory struct {

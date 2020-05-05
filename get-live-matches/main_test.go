@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"log"
-	. "premier-predictor-functions/common/domain"
-	"premier-predictor-functions/get-live-matches/factory"
-	. "premier-predictor-functions/get-live-matches/factory/mock"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	"github.com/cshep4/premier-predictor-functions/get-live-matches/factory"
+	. "github.com/cshep4/premier-predictor-functions/get-live-matches/factory/mock"
 	"testing"
 )
 

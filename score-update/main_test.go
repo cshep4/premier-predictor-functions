@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/stretchr/testify/assert"
-	. "premier-predictor-functions/score-update/constant"
-	"premier-predictor-functions/score-update/factory"
-	. "premier-predictor-functions/score-update/factory/mock"
+	. "github.com/cshep4/premier-predictor-functions/score-update/constant"
+	"github.com/cshep4/premier-predictor-functions/score-update/factory"
+	. "github.com/cshep4/premier-predictor-functions/score-update/factory/mock"
 	"testing"
 )
 

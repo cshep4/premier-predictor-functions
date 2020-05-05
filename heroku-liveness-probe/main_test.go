@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"log"
-	"premier-predictor-functions/heroku-liveness-probe/factory"
-	. "premier-predictor-functions/heroku-liveness-probe/factory/mock"
+	"github.com/cshep4/premier-predictor-functions/heroku-liveness-probe/factory"
+	. "github.com/cshep4/premier-predictor-functions/heroku-liveness-probe/factory/mock"
 	"testing"
 )
 

@@ -20,6 +20,9 @@ object MatchFactUtils {
         "West Ham" -> "West Ham United"
         "Wolves" -> "Wolverhampton Wanderers"
         "Manchester Utd" -> "Manchester United"
+        "Norwich" -> "Norwich City"
+        "Sheffield" -> "Sheffield United"
+        "Sheffield Utd" -> "Sheffield United"
         else -> name
     }
 

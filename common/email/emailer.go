@@ -5,7 +5,7 @@ import (
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
 	"os"
-	. "premier-predictor-functions/common/domain"
+	. "github.com/cshep4/premier-predictor-functions/common/domain"
 	"strings"
 )
 

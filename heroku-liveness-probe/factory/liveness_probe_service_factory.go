@@ -1,8 +1,8 @@
 package factory
 
 import (
-	. "premier-predictor-functions/common/service"
-	. "premier-predictor-functions/heroku-liveness-probe/service"
+	. "github.com/cshep4/premier-predictor-functions/common/service"
+	. "github.com/cshep4/premier-predictor-functions/heroku-liveness-probe/service"
 )
 
 type LivenessProbeServiceFactory struct {

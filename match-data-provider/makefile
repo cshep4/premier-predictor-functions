@@ -1,1 +1,0 @@
-build: GOOS=linux go build -o bin/main ./pkg/http

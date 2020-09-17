@@ -1,7 +1,0 @@
-bin
-
-# Serverless directories
-.serverless
-.idea
-
-*.gen.go

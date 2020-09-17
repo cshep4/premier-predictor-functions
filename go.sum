@@ -1,6 +1,4 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/ahl5esoft/golang-underscore v2.0.0+incompatible h1:uoDZDfVhxztzrcbMGatZjVsjJzDjDQz8lT4CFPaAxHM=
-github.com/ahl5esoft/golang-underscore v2.0.0+incompatible/go.mod h1:wzX7mL/afQ0rDhFm5FsyAGcPkBAfnXk7sa3Of6qQ4ac=
 github.com/avast/retry-go v2.6.0+incompatible h1:FelcMrm7Bxacr1/RM8+/eqkDkmVN7tjlsy51dOzB3LI=
 github.com/avast/retry-go v2.6.0+incompatible/go.mod h1:XtSnn+n/sHqQIpZ10K1qAevBhOOCWBLXXy3hyiqqBrY=
 github.com/aws/aws-lambda-go v1.19.1 h1:5iUHbIZ2sG6Yq/J1IN3sWm3+vAB1CWwhI21NffLNuNI=

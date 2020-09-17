@@ -1,8 +1,6 @@
 package service
 
 import (
-	. "github.com/ahl5esoft/golang-underscore"
-	"log"
 	. "github.com/cshep4/premier-predictor-functions/common/api"
 	interfaces2 "github.com/cshep4/premier-predictor-functions/common/api/interfaces"
 	. "github.com/cshep4/premier-predictor-functions/common/domain"
@@ -16,6 +14,7 @@ import (
 	"github.com/cshep4/premier-predictor-functions/common/redis/interfaces"
 	"github.com/cshep4/premier-predictor-functions/common/util"
 	. "github.com/cshep4/premier-predictor-functions/score-update/constant"
+	"log"
 	"time"
 )
 
@@ -62,7 +61,21 @@ func (s ScoreUpdateService) UpdateUserScores() error {
 		return err
 	}
 
-	if Any(matches, isTodayAndNotFinished) || All(matches, isNotToday) {
+	var (
+		needUpdating = true
+		today        = false
+	)
+	for _, m := range matches {
+		if isTodayAndNotFinished(m) {
+			needUpdating = false
+			break
+		}
+		if !isNotToday(m) {
+			today = true
+		}
+	}
+
+	if !needUpdating || !today {
 		log.Println(ErrScoresDoNotNeedUpdating.Error())
 		s.emailer.Send(getEmailArgs(ErrScoresDoNotNeedUpdating.Error()))
 		s.messenger.Send(ErrScoresDoNotNeedUpdating.Error())
@@ -91,13 +104,13 @@ func (s ScoreUpdateService) UpdateUserScores() error {
 	return s.redis.SetScoresUpdated()
 }
 
-var isTodayAndNotFinished = func(m MatchFacts, _ int) bool {
+func isTodayAndNotFinished(m MatchFacts) bool {
 	date, _ := time.Parse("02.01.2006", m.FormattedDate)
 
 	return isToday(date) && m.Status != "FT"
 }
 
-var isNotToday = func(m MatchFacts, _ int) bool {
+func isNotToday(m MatchFacts) bool {
 	date, _ := time.Parse("02.01.2006", m.FormattedDate)
 
 	return !isToday(date)

@@ -2,13 +2,12 @@ package service
 
 import (
 	"fmt"
-	. "github.com/ahl5esoft/golang-underscore"
-	"log"
 	. "github.com/cshep4/premier-predictor-functions/common/api"
 	iface "github.com/cshep4/premier-predictor-functions/common/api/interfaces"
 	. "github.com/cshep4/premier-predictor-functions/common/domain"
 	. "github.com/cshep4/premier-predictor-functions/common/redis"
 	"github.com/cshep4/premier-predictor-functions/common/redis/interfaces"
+	"log"
 	"time"
 )
 
@@ -67,25 +66,16 @@ func (l LiveMatchCheckService) UpdateLiveMatches() bool {
 		return true
 	}
 
-	liveMatches := Map(playingMatches, mapToLiveMatch).([]LiveMatch)
-
-	var saveErrs []error
-	Each(liveMatches, func(m LiveMatch, _ int) {
-		err := l.redis.SetLiveMatch(m)
-		saveErrs = append(saveErrs, err)
-	})
-
-	if ok := Any(saveErrs, isNotNil); ok {
-		log.Println("SAVE ERRORS:")
-		log.Println(saveErrs)
-		return false
+	for _, p := range playingMatches {
+		err := l.redis.SetLiveMatch(p.ToLiveMatch())
+		if err != nil {
+			log.Printf("Set live match err: %v", err)
+			return false
+		}
 	}
 
 	return true
 }
-
-var mapToLiveMatch = func(m MatchFacts, _ int) LiveMatch { return m.ToLiveMatch() }
-var isNotNil = func(e error, _ int) bool { return e != nil }
 
 var isValidDateTime = func(m MatchFacts) bool {
 	dateTime := fmt.Sprintf("%sT%s", m.FormattedDate, m.Time)

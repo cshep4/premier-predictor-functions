@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository
 class LiveMatchRepository {
     companion object {
         const val DATABASE = "liveMatch"
-        const val COLLECTION = "liveMatch"
+        const val COLLECTION = "2020-2021"
     }
 
     @Autowired

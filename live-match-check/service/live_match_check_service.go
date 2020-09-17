@@ -103,7 +103,7 @@ func isPlayingOrAboutToStart(m MatchFacts) (bool, error) {
 		return false, err
 	}
 
-	return m.Id != "2618715" && today && isValidDateTime(m) && (m.IsPlaying() || m.IsAboutToStart()), nil
+	return today && isValidDateTime(m) && (m.IsPlaying() || m.IsAboutToStart()), nil
 }
 
 func isMatchToday(m MatchFacts) (bool, error) {

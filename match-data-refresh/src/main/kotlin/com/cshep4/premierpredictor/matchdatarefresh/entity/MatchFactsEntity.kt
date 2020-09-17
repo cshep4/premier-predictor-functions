@@ -6,6 +6,7 @@ import com.cshep4.premierpredictor.matchdatarefresh.data.match.MatchFacts
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.correctStatus
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.getFullTeamName
 import com.cshep4.premierpredictor.matchdatarefresh.utils.MatchFactUtils.sanitiseScore
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.bson.codecs.pojo.annotations.BsonProperty
 import java.time.Clock
 import java.time.LocalDate
@@ -37,6 +38,12 @@ data class MatchFactsEntity(
         var compId: String? = null,
 
         var venueCity: String? = null,
+
+        var venueCountry: String? = null,
+
+        var venueLatitude: String? = null,
+
+        var venueLongitude: String? = null,
 
         var visitorTeamId: String? = null,
 
@@ -79,6 +86,9 @@ data class MatchFactsEntity(
             etScore = this.etScore,
             compId = this.compId,
             venueCity = this.venueCity,
+            venueLatitude = this.venueLatitude,
+            venueLongitude = this.venueLongitude,
+            venueCountry = this.venueCountry,
             visitorTeamId = this.visitorTeamId,
             timer = this.timer,
             htScore = this.htScore,
@@ -107,6 +117,9 @@ data class MatchFactsEntity(
                 etScore = dto.etScore,
                 compId = dto.compId,
                 venueCity = dto.venueCity,
+                venueLatitude = dto.venueLatitude,
+                venueLongitude = dto.venueLongitude,
+                venueCountry = dto.venueCountry,
                 visitorTeamId = dto.visitorTeamId,
                 timer = dto.timer,
                 htScore = dto.htScore,

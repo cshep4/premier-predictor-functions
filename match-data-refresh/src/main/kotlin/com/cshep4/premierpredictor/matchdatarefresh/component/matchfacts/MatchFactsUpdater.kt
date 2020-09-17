@@ -18,7 +18,7 @@ class MatchFactsUpdater {
 
     fun update(apiResult: List<MatchFacts>): List<MatchFacts> {
         val updated = liveMatchRepository.findAll()
-                .filter { it.wasRescheduled() || it.getDateTime()!!.isInFuture() || it.getDateTime()!!.isYesterday() }
+                .filter { it.wasRescheduled() || it.getDateTime()!!.isInFuture() }
                 .map {
                     mergeWithLatestVersion(
                             it,
@@ -35,6 +35,7 @@ class MatchFactsUpdater {
         apiMatch ?: return match
 
         apiMatch.commentary = match.commentary
+        apiMatch.events = match.events
         apiMatch.lastUpdated = time.localDateTimeNow()
 
         return apiMatch

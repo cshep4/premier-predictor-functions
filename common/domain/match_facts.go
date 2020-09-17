@@ -57,5 +57,10 @@ func (m MatchFacts) IsAboutToStart() bool {
 	kickOffTime, _ := time.Parse(layout, str)
 	tenMinutesTime := time.Now().UTC().Add(time.Minute * time.Duration(30))
 
-	return m.Status != "FT" && (kickOffTime.Equal(tenMinutesTime) || kickOffTime.Before(tenMinutesTime))
+	return m.Status != "FT" &&
+		m.Status != "Postp." &&
+		m.Status != "Cancl." &&
+		m.Status != "Awarded" &&
+		m.Status != "Aban." &&
+		(kickOffTime.Equal(tenMinutesTime) || kickOffTime.Before(tenMinutesTime))
 }

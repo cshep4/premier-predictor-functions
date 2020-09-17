@@ -1,6 +1,6 @@
 package com.cshep4.premierpredictor.matchdatarefresh.component.data
 
-import com.cshep4.premierpredictor.matchdatarefresh.component.api.ApiRequester
+import com.cshep4.premierpredictor.matchdatarefresh.component.api.DataRetriever
 import com.cshep4.premierpredictor.matchdatarefresh.component.matchfacts.MatchFactsUpdater
 import com.cshep4.premierpredictor.matchdatarefresh.component.match.MatchUpdater
 import com.cshep4.premierpredictor.matchdatarefresh.data.Match
@@ -10,13 +10,16 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import java.time.format.DateTimeParseException
 
 @Component
 class DataUpdater {
+
     @Autowired
-    private lateinit var apiRequester: ApiRequester
+    @Qualifier("liveScore")
+    private lateinit var dataRetriever: DataRetriever
 
     @Autowired
     private lateinit var matchFactsUpdater: MatchFactsUpdater
@@ -25,7 +28,7 @@ class DataUpdater {
     private lateinit var matchUpdater: MatchUpdater
 
     fun matchData(): List<MatchFacts> = runBlocking {
-        val apiResult = apiRequester.retrieveFixtures().map { validateDateTime(it) }
+        val apiResult = dataRetriever.retrieveFixtures().map { validateDateTime(it) }
 
         val matchUpdateResult = Channel<List<Match>>()
         val matchFactsUpdateResult = Channel<List<MatchFacts>>()

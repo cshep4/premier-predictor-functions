@@ -14,7 +14,7 @@ data class Commentary(
 		var matchId: String? = null,
 
 		@JsonProperty("match_info")
-		var matchInfo: List<MatchInfo>? = null,
+		var matchInfo: MatchInfo? = null,
 
 		@JsonProperty("lineup")
 		var lineup: Lineup? = null,

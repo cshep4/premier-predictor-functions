@@ -18,7 +18,7 @@ import org.springframework.stereotype.Repository
 class FixtureRepository {
     companion object {
         const val DATABASE = "fixture"
-        const val COLLECTION = "fixtures"
+        const val COLLECTION = "2020-2021"
     }
 
     @Autowired

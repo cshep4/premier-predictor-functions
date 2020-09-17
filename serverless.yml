@@ -14,9 +14,6 @@ provider:
         - lambda:InvokeFunction
       Resource: "*"
   environment:
-    DATABASE_URL: ${self:custom.secrets.dbUrl}
-    DATABASE_USERNAME: ${self:custom.secrets.dbUser}
-    DATABASE_PASSWORD: ${self:custom.secrets.dbPassword}
     DYNAMO_DB_ENDPOINT: ${self:custom.secrets.dynamoDbEndpoint}
     DYNAMO_DB_ACCESS_KEY: ${self:custom.secrets.dynamoDbAccessKey}
     DYNAMO_DB_SECRET_KEY: ${self:custom.secrets.dynamoDbSecretKey}
@@ -42,6 +39,7 @@ package:
    - match-update/**
    - user-score-updater/**
    - match-data-refresh/**
+   - match-data-provider/**
    - live-match-check/**
    - send-email/**
    - score-update/**
@@ -119,12 +117,12 @@ functions:
           resp: http
           method: post
           cors: true
-  score-update:
-    runtime: go1.x
-    timeout: 60
-    handler: score-update/bin/main
-    events:
-      - schedule: cron(15 22 ? * * *)
+#  score-update:
+#    runtime: go1.x
+#    timeout: 60
+#    handler: score-update/bin/main
+#    events:
+#      - schedule: cron(15 22 ? * * *)
   get-live-matches:
     runtime: go1.x
     handler: get-live-matches/bin/main
@@ -135,7 +133,7 @@ functions:
           method: get
           cors: true
   messenger:
-    runtime: nodejs8.10
+    runtime: nodejs12.x
     handler: messenger/handler.messenger
     environment:
       ACCESS_TOKEN: ${self:custom.secrets.messengerAccessToken}
@@ -165,7 +163,7 @@ functions:
           method: post
           cors: true
 #   fixture-update:
-#     runtime: nodejs8.10
+#     runtime: nodejs12.x
 #     handler: fixture-update/index.handler
 #     events:
 #       - schedule: cron(0 3 ? * * *)

@@ -3,12 +3,13 @@ package api
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
-	. "net/http"
-	"os"
+	"fmt"
 	. "github.com/cshep4/premier-predictor-functions/common/domain"
 	. "github.com/cshep4/premier-predictor-functions/common/http"
 	"github.com/cshep4/premier-predictor-functions/common/http/interfaces"
+	"io/ioutil"
+	. "net/http"
+	"os"
 	"time"
 )
 
@@ -18,8 +19,8 @@ type ApiRequester struct {
 	apiKey string
 }
 
-const fromDate string = "from_date="
-const toDate string = "to_date="
+const fromDate string = "fromDate="
+const toDate string = "toDate="
 const compId string = "comp_id=1204"
 const authorisation string = "Authorization="
 
@@ -38,7 +39,7 @@ func InjectApiRequester() ApiRequester {
 func (a ApiRequester) GetTodaysMatches() ([]MatchFacts, error) {
 	var matchFacts []MatchFacts
 
-	url := url(a.apiUrl, a.apiKey)
+	url := url(a.apiUrl)
 	resp, err := a.http.Get(url)
 
 	if err == nil && resp.StatusCode == StatusNotFound {
@@ -61,9 +62,9 @@ func (a ApiRequester) GetTodaysMatches() ([]MatchFacts, error) {
 	return matchFacts, nil
 }
 
-func url(apiUrl string, apiKey string) string {
+func url(apiUrl string) string {
 	yesterday := time.Now().UTC().AddDate(0, 0, -1).Local().Format("2006-01-02")
 	tomorrow := time.Now().UTC().AddDate(0, 0, 1).Local().Format("2006-01-02")
 
-	return apiUrl + "?" + fromDate + yesterday + "&" + toDate + tomorrow + "&" + compId + "&" + authorisation + apiKey
+	return fmt.Sprintf("%sepl/events?fromDate=%s&toDate=%s", apiUrl, yesterday, tomorrow)
 }

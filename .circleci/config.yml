@@ -252,7 +252,7 @@ workflows:
                 - master
       - deploy:
           requires:
-            - build-receipt-emailer
+            - build-user-score-updater
           filters:
             branches:
               only:

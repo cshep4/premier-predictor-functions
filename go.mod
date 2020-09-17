@@ -1,5 +1,7 @@
 module github.com/cshep4/premier-predictor-functions
 
+go 1.15
+
 require (
 	github.com/ahl5esoft/golang-underscore v0.0.0-20181004092115-ca48da4b8264
 	github.com/avast/retry-go v2.4.2+incompatible

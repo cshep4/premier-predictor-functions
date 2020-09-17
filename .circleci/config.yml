@@ -1,0 +1,259 @@
+version: 2.1
+
+jobs:
+  checkout-code:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  go-vendor:
+    docker:
+      - image: cimg/go:1.15
+    steps:
+      - attach_workspace:
+          at: .
+
+      - restore_cache:
+          keys:
+            - dependency-cache-{{ checksum "go.sum" }}
+
+      - run:
+          name: Install dependencies
+          command: |
+            go install github.com/golang/mock/mockgen
+            go generate ./...
+            go mod vendor
+
+      - save_cache:
+          key: dependency-cache-{{ checksum "go.sum" }}
+          paths:
+            - /go/pkg/mod
+
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  unit:
+    docker:
+      - image: << parameters.docker_image >>
+    parameters:
+      docker_image:
+        type: string
+      service_path:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Run tests
+          command: |
+            cd << parameters.service_path >>
+            make test-unit
+
+  integration:
+    docker:
+      - image: << parameters.docker_image >>
+      - image: circleci/mongo:3
+    parameters:
+      docker_image:
+        type: string
+      service_path:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Run tests
+          command: |
+            cd << parameters.service_path >>
+            make test-integration
+
+  build:
+    docker:
+      - image: << parameters.docker_image >>
+    parameters:
+      docker_image:
+        type: string
+      service_path:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Build Functions
+          command: |
+            cd << parameters.service_path >>
+            make -B build
+
+      - persist_to_workspace:
+          root: .
+          paths: .
+
+  deploy:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: .
+
+      - run:
+          name: Create secrets file
+          command: |
+            JSON='{
+              "dynamoDbEndpoint": "%s",
+              "dynamoDbAccessKey": "%s",
+              "dynamoDbSecretKey": "%s",
+              "redisHost": "%s",
+              "redisPort": "%s",
+              "redisPassword": "%s",
+              "apiKey": "%s",
+              "apiUrl": "%s",
+              "apiCommentaryUrl": "%s",
+              "sendgridApiKey": "%s",
+              "phoneNumber": "%s",
+              "messengerClientUrl": "%s",
+              "mongoScheme": "%s",
+              "mongoUsername": "%s",
+              "mongoPassword": "%s",
+              "mongoHost": "%s",
+              "mongoPort": "",
+              "messengerAccessToken": "%s",
+              "messengerVerifyToken": "%s",
+              "psid": "%s"
+            }\n'
+            printf "$JSON" \
+            "${DYNAMO_DB_ENDPOINT}" "${DYNAMO_DB_ACCESS_KEY}" "${DYNAMO_DB_SECRET_KEY}" \
+            "${REDIS_HOST}" "${REDIS_PORT}" "${REDIS_PASSWORD}" \
+            "${API_KEY}" "${API_URL}" "${API_COMMENTARY_URL}" \
+            "${SEND_GRID_API_KEY}" "${PHONE_NUMBER}" "${MESSENGER_CLIENT_URL}" \
+            "${MONGO_SCHEME}" "${MONGO_USERNAME}" "${MONGO_PASSWORD}" "${MONGO_HOST}" \
+            "${MESSENGER_ACCESS_TOKEN}" "${MESSENGER_VERIFY_TOKEN}" "${PSID}" > secrets.json
+
+      - run:
+          name: Install Serverless CLI, Configure Profile, Deploy
+          command: |
+            sudo npm i -g serverless
+            npm install
+            serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY} --profile personal
+            serverless deploy
+workflows:
+  version: 2.1
+  build-and-deploy:
+    jobs:
+      - checkout-code:
+          filters:
+            branches:
+              only:
+                - master
+      - go-vendor:
+          requires:
+            - checkout-code
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-get-live-matches
+          docker_image: cimg/go:1.15
+          service_path: get-live-matches
+          requires:
+            - go-vendor
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-heroku-liveness-probe
+          docker_image: cimg/go:1.15
+          service_path: heroku-liveness-probe
+          requires:
+            - build-get-live-matches
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-live-match-check
+          docker_image: cimg/go:1.15
+          service_path: live-match-check
+          requires:
+            - build-heroku-liveness-probe
+          filters:
+            branches:
+              only:
+                - master
+      #      - build:
+      #          name: build-score-update
+      #          docker_image: cimg/go:1.15
+      #          service_path: score-update
+      #          requires:
+      #            - build-live-match-check
+      #          filters:
+      #            branches:
+      #              only:
+      #                - master
+      - build:
+          name: build-send-email
+          docker_image: cimg/go:1.15
+          service_path: send-email
+          requires:
+            - build-live-match-check
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-send-message
+          docker_image: cimg/go:1.15
+          service_path: send-message
+          requires:
+            - build-send-email
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-match-data-refresh
+          docker_image: cimg/openjdk:11.0
+          service_path: match-data-refresh
+          requires:
+            - build-send-message
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-match-update
+          docker_image: cimg/openjdk:11.0
+          service_path: match-update
+          requires:
+            - build-match-data-refresh
+          filters:
+            branches:
+              only:
+                - master
+      - build:
+          name: build-user-score-updater
+          docker_image: cimg/openjdk:11.0
+          service_path: user-score-updater
+          requires:
+            - build-match-update
+          filters:
+            branches:
+              only:
+                - master
+      - deploy:
+          requires:
+            - build-receipt-emailer
+          filters:
+            branches:
+              only:
+                - master

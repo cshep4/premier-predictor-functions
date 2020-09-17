@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-lambda-go v1.6.0
 	github.com/aws/aws-sdk-go v1.25.19
 	github.com/golang/mock v1.3.1
+	github.com/heroku/heroku-go/v5 v5.2.0
 	github.com/json-iterator/go v1.1.5 // indirect
 	github.com/mediocregopher/radix/v3 v3.4.0
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect

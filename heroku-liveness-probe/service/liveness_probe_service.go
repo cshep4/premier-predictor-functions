@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"github.com/avast/retry-go"
-	"github.com/heroku/heroku-go/v3"
+	. "github.com/cshep4/premier-predictor-functions/common/http"
+	. "github.com/cshep4/premier-predictor-functions/common/messenger"
+	heroku "github.com/heroku/heroku-go/v5"
 	"log"
 	"net/http"
 	"os"
-	. "github.com/cshep4/premier-predictor-functions/common/http"
-	. "github.com/cshep4/premier-predictor-functions/common/messenger"
 	"time"
 )
 

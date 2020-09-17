@@ -222,7 +222,7 @@ workflows:
                 - master
       - build:
           name: build-match-data-refresh
-          docker_image: cimg/openjdk:11.0
+          docker_image: cimg/openjdk:8.0.262
           service_path: match-data-refresh
           requires:
             - build-send-message
@@ -232,7 +232,7 @@ workflows:
                 - master
       - build:
           name: build-match-update
-          docker_image: cimg/openjdk:11.0
+          docker_image: cimg/openjdk:8.0.262
           service_path: match-update
           requires:
             - build-match-data-refresh
@@ -242,7 +242,7 @@ workflows:
                 - master
       - build:
           name: build-user-score-updater
-          docker_image: cimg/openjdk:11.0
+          docker_image: cimg/openjdk:8.0.262
           service_path: user-score-updater
           requires:
             - build-match-update

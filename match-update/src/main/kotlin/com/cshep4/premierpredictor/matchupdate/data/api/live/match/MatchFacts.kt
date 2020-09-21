@@ -43,6 +43,15 @@ data class MatchFacts(
 		@JsonProperty("venue_city")
 		var venueCity: String? = null,
 
+		@JsonProperty("venue_country")
+		var venueCountry: String? = null,
+
+		@JsonProperty("venue_latitude")
+		var venueLatitude: String? = null,
+
+		@JsonProperty("venue_longitude")
+		var venueLongitude: String? = null,
+
 		@JsonProperty("status")
 		var status: String? = null,
 
@@ -93,6 +102,10 @@ data class MatchFacts(
 		var commentary: Commentary? = null,
 
 		@JsonIgnore
+		@JsonProperty("match_date")
+		var matchDate: String? = null,
+
+		@JsonIgnore
 		@JsonProperty("lastUpdated")
 		@JsonSerialize(using = LocalDateTimeSerializer::class)
 		@JsonDeserialize(using = LocalDateTimeDeserializer::class)
@@ -119,6 +132,9 @@ data class MatchFacts(
 			etScore = this.etScore,
 			compId = this.compId,
 			venueCity = this.venueCity,
+			venueLatitude = this.venueLatitude,
+			venueLongitude = this.venueLongitude,
+			venueCountry = this.venueCountry,
 			visitorTeamId = this.visitorTeamId,
 			timer = this.timer,
 			htScore = this.htScore,

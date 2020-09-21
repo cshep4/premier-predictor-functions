@@ -26,30 +26,16 @@ class LiveMatchUpdater {
         val storedMatch = liveMatchServiceRepository
                 .findById(id)
 
-        return updateMatchFacts(storedMatch, id)
+        val matchFacts = matchFactsRetriever.getLatest(id)
+
+        return updateMatchFacts(storedMatch, matchFacts)
     }
 
-    private fun updateMatchFacts(storedMatch: MatchFacts?, id: String): MatchFacts? = runBlocking {
-        val matchChannel = Channel<MatchFacts?>()
-        val commentaryChannel = Channel<Commentary?>()
-
-        launch {
-            matchChannel.send(matchFactsRetriever.getLatest(id))
-        }
-
-        launch {
-            commentaryChannel.send(commentaryRetriever.getLatest(id))
-        }
-
-        updateMatchFacts(storedMatch, matchChannel.receive(), commentaryChannel.receive())
-    }
-
-    private fun updateMatchFacts(storedMatch: MatchFacts?, updatedMatch: MatchFacts?, updatedCommentary: Commentary?): MatchFacts? {
+    private fun updateMatchFacts(storedMatch: MatchFacts?, updatedMatch: MatchFacts?): MatchFacts? {
         val matchFacts = updatedMatch ?: storedMatch ?: return null
 
-        matchFacts.commentary = when (updatedCommentary) {
-            null -> storedMatch?.commentary
-            else -> updatedCommentary
+        if (matchFacts.commentary == null) {
+            matchFacts.commentary = storedMatch?.commentary
         }
 
         liveMatchServiceRepository.save(matchFacts)

@@ -7,25 +7,22 @@ import com.github.kittinunf.fuel.httpGet
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
-@Component(value = "footballApi")
-class ApiRequester : DataRetriever {
+@Component(value = "liveScore")
+class LiveScoreApiRequester: DataRetriever {
     companion object {
         const val FROM_DATE: String = "2020-09-01"
         const val TO_DATE: String = "2021-06-01"
-        const val COMP_ID: String = "1204"
+        const val COMP_ID: String = "EPL"
     }
 
     @Value("\${API_URL}")
     private val apiUrl = ""
 
-    @Value("\${API_KEY}")
-    private val apiKey = ""
-
     @Value("\${API_COMMENTARY_URL}")
     private val apiCommentaryUrl = ""
 
     override fun retrieveFixtures(): List<MatchFacts> {
-        val url = "$apiUrl?from_date=$FROM_DATE&to_date=$TO_DATE&comp_id=$COMP_ID&Authorization=$apiKey"
+        val url = "$apiUrl$COMP_ID/events?fromDate=$FROM_DATE&toDate=$TO_DATE"
         val (_, _, result) = url.httpGet().responseString()
 
         return result.fold({ data ->
@@ -36,7 +33,7 @@ class ApiRequester : DataRetriever {
     }
 
     override fun retrieveCommentary(id: String): Commentary? {
-        val url = "$apiCommentaryUrl$id?Authorization=$apiKey"
+        val url = "$apiCommentaryUrl$id"
         val (_, _, result) = url.httpGet().responseString()
 
         return result.fold({ data ->
@@ -47,7 +44,7 @@ class ApiRequester : DataRetriever {
     }
 
     override fun retrieveMatch(id: String): MatchFacts? {
-        val url = "$apiUrl$id?Authorization=$apiKey"
+        val url = "$apiUrl/$COMP_ID/match/$id"
         val (_, _, result) = url.httpGet().responseString()
 
         return result.fold({ data ->

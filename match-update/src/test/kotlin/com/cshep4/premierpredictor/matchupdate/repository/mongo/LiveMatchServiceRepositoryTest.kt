@@ -5,7 +5,6 @@ import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Commenta
 import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Lineup
 import com.cshep4.premierpredictor.matchupdate.data.api.live.commentary.Position
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
-import com.cshep4.premierpredictor.matchupdate.entity.MatchFactsEntity
 import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository.Companion.COLLECTION
 import com.cshep4.premierpredictor.matchupdate.repository.mongo.LiveMatchServiceRepository.Companion.DATABASE
 import com.cshep4.premierpredictor.matchupdate.utils.TestUtils

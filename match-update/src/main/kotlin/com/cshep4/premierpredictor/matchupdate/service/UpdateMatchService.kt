@@ -58,7 +58,7 @@ class UpdateMatchService {
 
     private fun processFinishedMatches(matches: Collection<Match>) {
         matchWriter.fixtures(matches)
-        liveMatchDataHandler.remove(matches.map { it.id.toString() })
+        liveMatchDataHandler.remove(matches.map { it.id })
 
         System.out.println("haveScoresBeenUpdatedToday: " + scoresUpdatedReader.scoresLastUpdated().isToday())
 

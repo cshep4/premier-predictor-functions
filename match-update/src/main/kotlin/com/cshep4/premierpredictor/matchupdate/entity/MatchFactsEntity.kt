@@ -38,6 +38,12 @@ data class MatchFactsEntity(
 
         var venueCity: String? = null,
 
+        var venueCountry: String? = null,
+
+        var venueLatitude: String? = null,
+
+        var venueLongitude: String? = null,
+
         var visitorTeamId: String? = null,
 
         var timer: String? = null,
@@ -79,6 +85,9 @@ data class MatchFactsEntity(
             etScore = this.etScore,
             compId = this.compId,
             venueCity = this.venueCity,
+            venueLatitude = this.venueLatitude,
+            venueLongitude = this.venueLongitude,
+            venueCountry = this.venueCountry,
             visitorTeamId = this.visitorTeamId,
             timer = this.timer,
             htScore = this.htScore,
@@ -107,6 +116,9 @@ data class MatchFactsEntity(
                 etScore = dto.etScore,
                 compId = dto.compId,
                 venueCity = dto.venueCity,
+                venueLatitude = dto.venueLatitude,
+                venueLongitude = dto.venueLongitude,
+                venueCountry = dto.venueCountry,
                 visitorTeamId = dto.visitorTeamId,
                 timer = dto.timer,
                 htScore = dto.htScore,

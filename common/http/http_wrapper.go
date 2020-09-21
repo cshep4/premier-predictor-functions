@@ -3,10 +3,10 @@ package http
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/cshep4/premier-predictor-functions/common/util"
 	"log"
 	"net/http"
 	. "net/http"
-	"github.com/cshep4/premier-predictor-functions/common/util"
 	"time"
 )
 

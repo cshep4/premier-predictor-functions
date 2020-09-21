@@ -19,23 +19,16 @@ class LiveMatchUpdater {
     @Autowired
     private lateinit var matchFactsRetriever: MatchFactsRetriever
 
-    @Autowired
-    private lateinit var commentaryRetriever: CommentaryRetriever
-
     fun retrieveLatest(id: String): MatchFacts? {
         val storedMatch = liveMatchServiceRepository
                 .findById(id)
 
-        val matchFacts = matchFactsRetriever.getLatest(id)
+        val updatedMatch = matchFactsRetriever.getLatest(id)
 
-        return updateMatchFacts(storedMatch, matchFacts)
-    }
-
-    private fun updateMatchFacts(storedMatch: MatchFacts?, updatedMatch: MatchFacts?): MatchFacts? {
         val matchFacts = updatedMatch ?: storedMatch ?: return null
 
-        if (matchFacts.commentary == null) {
-            matchFacts.commentary = storedMatch?.commentary
+        if (updatedMatch?.commentary == null) {
+            updatedMatch.commentary = storedMatch?.commentary
         }
 
         liveMatchServiceRepository.save(matchFacts)

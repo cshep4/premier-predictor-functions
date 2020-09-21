@@ -1,8 +1,8 @@
 package mock
 
 import (
-	"github.com/stretchr/testify/mock"
 	. "github.com/cshep4/premier-predictor-functions/common/domain"
+	"github.com/stretchr/testify/mock"
 	. "time"
 )
 
@@ -10,7 +10,7 @@ type RedisRepository struct {
 	mock.Mock
 }
 
-func (_m *RedisRepository) GetAllLiveMatches() []LiveMatch {
+func (_m *RedisRepository) GetAllLiveMatches() ([]LiveMatch, error) {
 	ret := _m.Called()
 
 	var r []LiveMatch
@@ -20,7 +20,7 @@ func (_m *RedisRepository) GetAllLiveMatches() []LiveMatch {
 		r = ret.Get(0).([]LiveMatch)
 	}
 
-	return r
+	return r, nil
 }
 
 func (_m *RedisRepository) GetLiveMatch(id string) LiveMatch {
@@ -83,7 +83,7 @@ func (_m *RedisRepository) SetScoresUpdated() error {
 	return r
 }
 
-func (_m *RedisRepository) Flush() error  {
+func (_m *RedisRepository) Flush() error {
 	ret := _m.Called()
 
 	if ret.Get(0) == nil {
@@ -91,6 +91,38 @@ func (_m *RedisRepository) Flush() error  {
 	} else {
 		return ret.Get(0).(error)
 	}
+}
+
+func (_m *RedisRepository) SetIdempotency(key string) error {
+	ret := _m.Called(key)
+
+	var e error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		e = rf(key)
+	} else {
+		e = ret.Get(0).(error)
+	}
+
+	return e
+}
+
+func (_m *RedisRepository) CheckIdempotency(key string) (bool, error) {
+	ret := _m.Called(key)
+
+	var r bool
+	if rf, ok := ret.Get(0).(func(string) bool); ok {
+		r = rf(key)
+	} else {
+		r = ret.Get(0).(bool)
+	}
+	var e error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		e = rf(key)
+	} else {
+		e = ret.Get(1).(error)
+	}
+
+	return r, e
 }
 
 func (_m *RedisRepository) Close() {

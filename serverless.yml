@@ -34,30 +34,22 @@ provider:
 
 package:
  exclude:
+   - .circleci/**
    - common/**
-   - data-retriever/**
-   - match-update/**
-   - user-score-updater/**
+   - live-match/**
    - match-data-refresh/**
-   - match-data-provider/**
-   - live-match-check/**
-   - send-email/**
-   - score-update/**
-   - get-live-matches/**
-   - fixture-update/**
-   - heroku-liveness-probe/**
+   - match-update/**
    - screenshots/**
+   - send-email/**
    - send-message/**
+   - user-score-updater/**
  include:
    - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
    - user-score-updater/build/libs/user-score-updater-0.0.1-SNAPSHOT-aws.jar
    - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
-   - live-match-check/bin/**
+   - live-match/bin/**
    - send-email/bin/**
    - send-message/bin/**
-   - score-update/bin/**
-   - get-live-matches/bin/**
-   - heroku-liveness-probe/bin/**
 
 functions:
   match-update:
@@ -99,7 +91,7 @@ functions:
       - schedule: cron(0 3 ? * * *)
   live-match-check:
     runtime: go1.x
-    handler: live-match-check/bin/main
+    handler: live-match/bin/live-match-check
     events:
       - schedule: rate(5 minutes)
   send-email:
@@ -117,15 +109,9 @@ functions:
           resp: http
           method: post
           cors: true
-#  score-update:
-#    runtime: go1.x
-#    timeout: 60
-#    handler: score-update/bin/main
-#    events:
-#      - schedule: cron(15 22 ? * * *)
   get-live-matches:
     runtime: go1.x
-    handler: get-live-matches/bin/main
+    handler: live-match/bin/get-live-matches
     events:
       - http:
           path: live
@@ -162,16 +148,3 @@ functions:
           resp: http
           method: post
           cors: true
-#   fixture-update:
-#     runtime: nodejs12.x
-#     handler: fixture-update/index.handler
-#     events:
-#       - schedule: cron(0 3 ? * * *)
-#  heroku-liveness-probe:
-#    runtime: go1.x
-#    handler: heroku-liveness-probe/bin/main
-#    environment:
-#      HEROKU_API_KEY: ${self:custom.secrets.herokuApiKey}
-#      HEROKU_HEALTH_URL: ${self:custom.secrets.herokuHealthUrl}
-#    events:
-#      - schedule: rate(1 minute)

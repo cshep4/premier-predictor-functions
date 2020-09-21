@@ -1,6 +1,7 @@
 package domain
 
 import (
+	"fmt"
 	"strings"
 	"time"
 )
@@ -50,17 +51,49 @@ func (m MatchFacts) IsPlaying() bool {
 		!strings.Contains(m.Status, ":")
 }
 
-func (m MatchFacts) IsAboutToStart() bool {
+func (m MatchFacts) IsToday() (bool, error) {
+	dateTime := fmt.Sprintf("%sT%s", m.FormattedDate, m.Time)
+	matchTime, err := time.Parse("02.01.2006T15:04", dateTime)
+	if err != nil {
+		return false, err
+	}
+
+	y1, m1, d1 := matchTime.Date()
+	y2, m2, d2 := time.Now().Date()
+
+	return y1 == y2 && m1 == m2 && d1 == d2, nil
+}
+
+func (m MatchFacts) IsAboutToStart() (bool, error) {
 	layout := "02.01.2006T15:04"
 	str := m.FormattedDate + "T" + m.Time
 
-	kickOffTime, _ := time.Parse(layout, str)
-	tenMinutesTime := time.Now().UTC().Add(time.Minute * time.Duration(30))
+	kickOffTime, err := time.Parse(layout, str)
+	if err != nil {
+		return false, fmt.Errorf("parse: %w", err)
+	}
+	thirtyMinutesTime := time.Now().
+		UTC().
+		Add(time.Minute * time.Duration(30))
 
 	return m.Status != "FT" &&
 		m.Status != "Postp." &&
 		m.Status != "Cancl." &&
 		m.Status != "Awarded" &&
 		m.Status != "Aban." &&
-		(kickOffTime.Equal(tenMinutesTime) || kickOffTime.Before(tenMinutesTime))
+		(kickOffTime.Equal(thirtyMinutesTime) || kickOffTime.Before(thirtyMinutesTime)), nil
+}
+
+func (m MatchFacts) ShouldBeUpdated() (bool, error) {
+	today, err := m.IsToday()
+	if err != nil {
+		return false, fmt.Errorf("is_today: %w", err)
+	}
+
+	aboutToStart, err := m.IsAboutToStart()
+	if err != nil {
+		return false, fmt.Errorf("is_about_to_start: %w", err)
+	}
+
+	return today && (m.IsPlaying() || aboutToStart), nil
 }

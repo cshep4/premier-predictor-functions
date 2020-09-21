@@ -2,10 +2,10 @@ package redis
 
 import (
 	"fmt"
-	"github.com/mediocregopher/radix/v3"
-	"log"
 	. "github.com/cshep4/premier-predictor-functions/common/domain"
 	"github.com/cshep4/premier-predictor-functions/common/util"
+	"github.com/mediocregopher/radix/v3"
+	"log"
 	. "time"
 )
 
@@ -17,13 +17,15 @@ func InjectRedisRepository() Repository {
 	return Repository{Dial()}
 }
 
-func (r Repository) GetAllLiveMatches() []LiveMatch {
+func (r Repository) GetAllLiveMatches() ([]LiveMatch, error) {
 	var keys []string
 
 	key := LIVE_MATCH + ":*"
 
 	err := r.redis.Do(radix.Cmd(&keys, KEYS, key))
-	util.CheckErr(err)
+	if err != nil {
+		return nil, fmt.Errorf("redis_keys: %w", err)
+	}
 
 	var liveMatches []LiveMatch
 
@@ -31,12 +33,14 @@ func (r Repository) GetAllLiveMatches() []LiveMatch {
 		var liveMatch LiveMatch
 
 		err = r.redis.Do(radix.Cmd(&liveMatch, GET_ALL, k))
-		util.CheckErr(err)
+		if err != nil {
+			return nil, fmt.Errorf("redis_hgetall: %w", err)
+		}
 
 		liveMatches = append(liveMatches, liveMatch)
 	}
 
-	return liveMatches
+	return liveMatches, nil
 }
 
 func (r Repository) GetLiveMatch(id string) LiveMatch {
@@ -59,7 +63,10 @@ func (r Repository) SetLiveMatch(liveMatch LiveMatch) error {
 		CLASS:          LIVE_MATCH_CLASS,
 	}
 
-	r.addToSetOfIds(LIVE_MATCH, liveMatch.Id)
+	err := r.addToSetOfIds(LIVE_MATCH, liveMatch.Id)
+	if err != nil {
+		return err
+	}
 
 	key := LIVE_MATCH + ":" + liveMatch.Id
 
@@ -87,7 +94,10 @@ func (r Repository) SetScoresUpdated() error {
 		CLASS:        SCORES_UPDATED_CLASS,
 	}
 
-	r.addToSetOfIds(SCORES_UPDATED, SCORES_UPDATED_ID)
+	err := r.addToSetOfIds(SCORES_UPDATED, SCORES_UPDATED_ID)
+	if err != nil {
+		return err
+	}
 
 	key := SCORES_UPDATED + ":" + SCORES_UPDATED_ID
 
@@ -117,7 +127,10 @@ func (r Repository) CheckIdempotency(key string) (bool, error) {
 
 func (r Repository) Flush() error {
 	var keys []string
-	r.redis.Do(radix.Cmd(&keys, "KEYS", LIVE_MATCH+"*"))
+	err := r.redis.Do(radix.Cmd(&keys, "KEYS", LIVE_MATCH+"*"))
+	if err != nil {
+		return err
+	}
 
 	if len(keys) == 0 {
 		log.Println("No live matches to flush")

@@ -24,9 +24,9 @@ const toDate string = "toDate="
 const compId string = "comp_id=1204"
 const authorisation string = "Authorization="
 
-var errIncorrectResponse = errors.New("Response not in correct formt")
-var errRequestUnsuccessful = errors.New("API request not successful")
-var ErrNotFound = errors.New("No matches found")
+var errIncorrectResponse = errors.New("response not in correct format")
+var errRequestUnsuccessful = errors.New("api request not successful")
+var ErrNotFound = errors.New("no matches found")
 
 func InjectApiRequester() ApiRequester {
 	return ApiRequester{

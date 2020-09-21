@@ -106,7 +106,7 @@ func setup() (*mock.HttpWrapper, ApiRequester, string) {
 		apiUrl: apiUrl,
 		apiKey: apiKey,
 	}
-	url := url(apiUrl, apiKey)
+	url := url(apiUrl)
 	return mockHttp, apiRequester, url
 }
 

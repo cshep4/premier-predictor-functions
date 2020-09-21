@@ -7,7 +7,7 @@ import (
 
 type RedisRepository interface {
 	GetLiveMatch(id string) LiveMatch
-	GetAllLiveMatches() []LiveMatch
+	GetAllLiveMatches() ([]LiveMatch, error)
 	SetLiveMatch(liveMatch LiveMatch) error
 	GetScoresUpdated() Time
 	SetScoresUpdated() error

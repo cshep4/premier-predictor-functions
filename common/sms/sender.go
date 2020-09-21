@@ -24,19 +24,19 @@ func (s Sender) Send(message, phoneNumber string) error {
 	svc := sns.New(sess)
 
 	m := map[string]*sns.MessageAttributeValue{
-		"AWS.SNS.SMS.SenderID": &sns.MessageAttributeValue{
-			DataType: aws.String("String"),
+		"AWS.SNS.SMS.SenderID": {
+			DataType:    aws.String("String"),
 			StringValue: aws.String("PremPred"),
 		},
-		"DefaultSMSType": &sns.MessageAttributeValue{
-			DataType: aws.String("String"),
+		"DefaultSMSType": {
+			DataType:    aws.String("String"),
 			StringValue: aws.String("Transactional"),
 		},
 	}
 
 	params := &sns.PublishInput{
-		Message:     aws.String(message),
-		PhoneNumber: aws.String(phoneNumber),
+		Message:           aws.String(message),
+		PhoneNumber:       aws.String(phoneNumber),
 		MessageAttributes: m,
 	}
 

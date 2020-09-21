@@ -2,6 +2,7 @@ package com.cshep4.premierpredictor.matchupdate.repository.mongo
 
 import com.cshep4.premierpredictor.matchupdate.config.MongoConfig.Companion.ID
 import com.cshep4.premierpredictor.matchupdate.data.api.live.match.MatchFacts
+import com.cshep4.premierpredictor.matchupdate.entity.MatchFactsEntity
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase

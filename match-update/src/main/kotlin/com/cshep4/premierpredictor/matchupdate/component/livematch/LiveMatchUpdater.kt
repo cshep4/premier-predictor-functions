@@ -28,7 +28,7 @@ class LiveMatchUpdater {
         val matchFacts = updatedMatch ?: storedMatch ?: return null
 
         if (updatedMatch?.commentary == null) {
-            updatedMatch.commentary = storedMatch?.commentary
+            updatedMatch?.commentary = storedMatch?.commentary
         }
 
         liveMatchServiceRepository.save(matchFacts)

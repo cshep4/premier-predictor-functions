@@ -163,7 +163,7 @@ workflows:
       - build:
           name: build-live-match
           docker_image: cimg/go:1.15
-          service_path: live-match-check
+          service_path: live-match
           requires:
             - checkout-code
           filters:

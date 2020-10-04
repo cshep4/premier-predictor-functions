@@ -89,7 +89,6 @@ stepFunctions:
             End: true
           END:
             Type: Succeed
-            End: true
 
 functions:
   match-update:

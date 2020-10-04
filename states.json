@@ -39,8 +39,7 @@
       "End": true
     },
     "END": {
-      "Type": "Succeed",
-      "End": true
+      "Type": "Succeed"
     }
   }
 }

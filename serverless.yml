@@ -34,6 +34,7 @@ provider:
     MONGO_PASSWORD: ${self:custom.secrets.mongoPassword}
     MONGO_HOST: ${self:custom.secrets.mongoHost}
     MONGO_PORT: ${self:custom.secrets.mongoPort}
+    AWS_REGION: ${self:provider.region}
 
 package:
  exclude:
@@ -64,8 +65,8 @@ stepFunctions:
         States:
           UPDATE_MATCHES:
             Type: Task
-            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-${opt:stage}-match-update"
-            ResultPath: "$.shouldUpdateScores"
+            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-dev-match-update"
+            ResultPath: "$.next"
             Next: CHECK_MATCHES_FINISHED
           CHECK_MATCHES_FINISHED:
             Type: Choice
@@ -84,7 +85,7 @@ stepFunctions:
             Seconds: 10
             Next: UPDATE_MATCHES
           UPDATE_USER_SCORES:
-            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-${opt:stage}-user-score-updater"
+            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-dev-user-score-updater"
             End: true
           END:
             Type: Succeed

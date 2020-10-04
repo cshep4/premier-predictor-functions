@@ -10,6 +10,10 @@ import (
 )
 
 type (
+	MatchUpdater interface {
+		IsRunning(ctx context.Context) (bool, error)
+		Start(ctx context.Context) error
+	}
 	Retriever interface {
 		GetTodaysMatches() ([]domain.MatchFacts, error)
 	}
@@ -20,8 +24,9 @@ type (
 	}
 
 	service struct {
-		retriever Retriever
-		store     Store
+		retriever    Retriever
+		matchUpdater MatchUpdater
+		store        Store
 	}
 
 	// InvalidParameterError is returned when a required parameter passed to New is invalid.
@@ -34,21 +39,24 @@ func (i InvalidParameterError) Error() string {
 	return fmt.Sprintf("invalid parameter %s", i.Parameter)
 }
 
-func New(retriever Retriever, store Store) (*service, error) {
+func New(retriever Retriever, store Store, matchUpdater MatchUpdater) (*service, error) {
 	switch {
 	case retriever == nil:
 		return nil, InvalidParameterError{Parameter: "retriever"}
 	case store == nil:
 		return nil, InvalidParameterError{Parameter: "store"}
+	case matchUpdater == nil:
+		return nil, InvalidParameterError{Parameter: "matchUpdater"}
 	}
 
 	return &service{
-		retriever: retriever,
-		store:     store,
+		retriever:    retriever,
+		store:        store,
+		matchUpdater: matchUpdater,
 	}, nil
 }
 
-func (s *service) CheckLiveMatches(context.Context) error {
+func (s *service) CheckLiveMatches(ctx context.Context) error {
 	matchFacts, err := s.retriever.GetTodaysMatches()
 	if err != nil {
 		if errors.Is(err, api.ErrNotFound) {
@@ -57,6 +65,7 @@ func (s *service) CheckLiveMatches(context.Context) error {
 		return fmt.Errorf("get_todays_matches: %w", err)
 	}
 
+	matchesPlaying := false
 	for _, m := range matchFacts {
 		shouldUpdate, err := m.ShouldBeUpdated()
 		if err != nil {
@@ -66,9 +75,27 @@ func (s *service) CheckLiveMatches(context.Context) error {
 			continue
 		}
 
+		matchesPlaying = true
 		if err := s.store.SetLiveMatch(m.ToLiveMatch()); err != nil {
 			return fmt.Errorf("set_live_match: %w", err)
 		}
+	}
+
+	if !matchesPlaying {
+		return nil
+	}
+
+	running, err := s.matchUpdater.IsRunning(ctx)
+	if err != nil {
+		return fmt.Errorf("match_updater_is_running: %w", err)
+	}
+	if running {
+		return nil
+	}
+
+	err = s.matchUpdater.Start(ctx)
+	if err != nil {
+		return fmt.Errorf("match_updater_start: %w", err)
 	}
 
 	return nil

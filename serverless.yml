@@ -34,7 +34,7 @@ provider:
     MONGO_PASSWORD: ${self:custom.secrets.mongoPassword}
     MONGO_HOST: ${self:custom.secrets.mongoHost}
     MONGO_PORT: ${self:custom.secrets.mongoPort}
-    AWS_REGION: ${self:provider.region}
+    REGION: ${self:provider.region}
 
 package:
  exclude:
@@ -134,6 +134,8 @@ functions:
     runtime: go1.x
     handler: live-match/bin/live-match-check
     reservedConcurrency: 1
+    environment:
+      STATE_MACHINE_ARN: "arn:aws:states:${self:provider.region}:${self:custom.secrets.awsAccountId}:stateMachine:matchUpdate"
     events:
       - schedule: rate(5 minutes)
   send-email:

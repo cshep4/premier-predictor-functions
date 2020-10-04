@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go/service/sfn"
+	"github.com/cshep4/premier-predictor-functions/live-match/internal/update"
 
 	"github.com/cshep4/lambda-go/lambda"
 	"github.com/cshep4/lambda-go/log"
@@ -41,7 +43,12 @@ func main() {
 }
 
 func setup(context.Context) error {
-	service, err := live.New(api.InjectApiRequester(), redis.InjectRedisRepository())
+	updater, err := update.New(&sfn.SFN{}, "state machine")
+	if err != nil {
+		return fmt.Errorf("new_match_updater: %w", err)
+	}
+
+	service, err := live.New(api.InjectApiRequester(), redis.InjectRedisRepository(), updater)
 	if err != nil {
 		return fmt.Errorf("new_live_match_service: %w", err)
 	}

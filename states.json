@@ -1,15 +1,15 @@
 {
-  "StartAt": "UPDATE_MATCHES",
   "Comment": "Updates currently being played every 10 seconds",
+  "StartAt": "UPDATE_MATCHES",
   "States": {
     "UPDATE_MATCHES": {
       "Type": "Task",
       "Resource": "arn:aws:lambda:us-east-1:925427442847:function:premier-predictor-dev-match-update",
-      "ResultPath": "$.next",
       "Next": "CHECK_MATCHES_FINISHED"
     },
     "CHECK_MATCHES_FINISHED": {
       "Type": "Choice",
+      "Default": "UNEXPECTED_NEXT_STATE",
       "Choices": [
         {
           "Variable": "$.next",
@@ -40,6 +40,10 @@
     },
     "END": {
       "Type": "Succeed"
+    },
+    "UNEXPECTED_NEXT_STATE": {
+      "Type": "Fail",
+      "Cause": "No Matches!"
     }
   }
 }

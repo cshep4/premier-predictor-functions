@@ -3,6 +3,7 @@ package update
 import (
 	"context"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
 
 	"github.com/aws/aws-sdk-go/service/sfn"
 )
@@ -40,18 +41,13 @@ func New(sfn *sfn.SFN, stateMachine string) (*matchUpdater, error) {
 func (m *matchUpdater) IsRunning(ctx context.Context) (bool, error) {
 	res, err := m.sfn.ListExecutionsWithContext(ctx, &sfn.ListExecutionsInput{
 		StateMachineArn: &m.stateMachine,
+		StatusFilter:    aws.String(sfn.ExecutionStatusRunning),
 	})
 	if err != nil {
 		return false, fmt.Errorf("list_executions: %w", err)
 	}
 
-	for _, e := range res.Executions {
-		if *e.Status == sfn.ExecutionStatusRunning {
-			return true, nil
-		}
-	}
-
-	return false, nil
+	return len(res.Executions) > 0, nil
 }
 
 func (m *matchUpdater) Start(ctx context.Context) error {

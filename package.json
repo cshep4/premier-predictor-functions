@@ -3,5 +3,7 @@
   "description": "",
   "version": "0.1.0",
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "serverless-step-functions": "^2.26.0"
+  }
 }

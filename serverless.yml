@@ -3,6 +3,9 @@ service: premier-predictor
 custom:
   secrets: ${file(secrets.json)}
 
+plugins:
+  - serverless-step-functions
+
 provider:
   name: aws
   profile: personal

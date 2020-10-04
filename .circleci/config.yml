@@ -125,6 +125,7 @@ jobs:
               "mongoPassword": "%s",
               "mongoHost": "%s",
               "mongoPort": "",
+              "mongoUri": "%s",
               "messengerAccessToken": "%s",
               "messengerVerifyToken": "%s",
               "psid": "%s",
@@ -135,7 +136,7 @@ jobs:
             "${REDIS_HOST}" "${REDIS_PORT}" "${REDIS_PASSWORD}" \
             "${API_KEY}" "${API_URL}" "${API_COMMENTARY_URL}" \
             "${SEND_GRID_API_KEY}" "${PHONE_NUMBER}" "${MESSENGER_CLIENT_URL}" \
-            "${MONGO_SCHEME}" "${MONGO_USERNAME}" "${MONGO_PASSWORD}" "${MONGO_HOST}" \
+            "${MONGO_SCHEME}" "${MONGO_USERNAME}" "${MONGO_PASSWORD}" "${MONGO_HOST}" "${MONGO_URI}" \
             "${MESSENGER_ACCESS_TOKEN}" "${MESSENGER_VERIFY_TOKEN}" "${PSID}" \
             "${AWS_ACCOUNT_ID}" > secrets.json
 

@@ -39,6 +39,7 @@ provider:
     MONGO_PASSWORD: ${self:custom.secrets.mongoPassword}
     MONGO_HOST: ${self:custom.secrets.mongoHost}
     MONGO_PORT: ${self:custom.secrets.mongoPort}
+    MONGO_URI: ${self:custom.secrets.mongoUri}
     REGION: ${self:provider.region}
 
 package:

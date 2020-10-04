@@ -20,8 +20,7 @@ provider:
       Action:
         - "states:ListExecutions"
         - "states:StartExecution"
-      Resource:
-        - "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-dev-live-match-check"
+      Resource: "*"
   environment:
     DYNAMO_DB_ENDPOINT: ${self:custom.secrets.dynamoDbEndpoint}
     DYNAMO_DB_ACCESS_KEY: ${self:custom.secrets.dynamoDbAccessKey}

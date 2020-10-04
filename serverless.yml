@@ -72,10 +72,10 @@ stepFunctions:
           UPDATE_MATCHES:
             Type: Task
             Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-dev-match-update"
-            ResultPath: "$.next"
             Next: CHECK_MATCHES_FINISHED
           CHECK_MATCHES_FINISHED:
             Type: Choice
+            Default: "UNEXPECTED_NEXT_STATE"
             Choices:
               - Variable: $.next
                 StringEquals: "UPDATE_USER_SCORES"
@@ -96,6 +96,8 @@ stepFunctions:
             End: true
           END:
             Type: Succeed
+          UNEXPECTED_NEXT_STATE:
+            Type: Fail
 
 functions:
   match-update:

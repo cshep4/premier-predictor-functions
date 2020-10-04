@@ -85,6 +85,7 @@ stepFunctions:
             Seconds: 10
             Next: UPDATE_MATCHES
           UPDATE_USER_SCORES:
+            Type: Task
             Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-dev-user-score-updater"
             End: true
           END:

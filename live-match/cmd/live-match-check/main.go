@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/cshep4/premier-predictor-functions/live-match/internal/update"
 	"os"
 
 	awsconfig "github.com/aws/aws-sdk-go/aws"
@@ -17,6 +16,7 @@ import (
 
 	"github.com/cshep4/premier-predictor-functions/live-match/internal/handler/aws"
 	"github.com/cshep4/premier-predictor-functions/live-match/internal/live"
+	"github.com/cshep4/premier-predictor-functions/live-match/internal/update"
 )
 
 const (

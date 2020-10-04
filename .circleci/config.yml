@@ -127,7 +127,8 @@ jobs:
               "mongoPort": "",
               "messengerAccessToken": "%s",
               "messengerVerifyToken": "%s",
-              "psid": "%s"
+              "psid": "%s",
+              "awsAccountId": "%s"s
             }\n'
             printf "$JSON" \
             "${DYNAMO_DB_ENDPOINT}" "${DYNAMO_DB_ACCESS_KEY}" "${DYNAMO_DB_SECRET_KEY}" \
@@ -135,7 +136,8 @@ jobs:
             "${API_KEY}" "${API_URL}" "${API_COMMENTARY_URL}" \
             "${SEND_GRID_API_KEY}" "${PHONE_NUMBER}" "${MESSENGER_CLIENT_URL}" \
             "${MONGO_SCHEME}" "${MONGO_USERNAME}" "${MONGO_PASSWORD}" "${MONGO_HOST}" \
-            "${MESSENGER_ACCESS_TOKEN}" "${MESSENGER_VERIFY_TOKEN}" "${PSID}" > secrets.json
+            "${MESSENGER_ACCESS_TOKEN}" "${MESSENGER_VERIFY_TOKEN}" "${PSID}" \
+            "${AWS_ACCOUNT_ID}" > secrets.json
 
       - run:
           name: Install Serverless CLI, Configure Profile, Deploy

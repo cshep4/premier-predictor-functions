@@ -2,17 +2,17 @@ package main
 
 import (
 	"encoding/json"
+	"log"
+
 	. "github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"log"
-	. "github.com/cshep4/premier-predictor-functions/common/factory"
 	"github.com/cshep4/premier-predictor-functions/common/response"
+
 	"github.com/cshep4/premier-predictor-functions/send-message/domain"
 	. "github.com/cshep4/premier-predictor-functions/send-message/factory"
-	"github.com/cshep4/premier-predictor-functions/send-message/service/interfaces"
 )
 
-var messageServiceFactory ServiceFactory
+var messageServiceFactory MessageServiceFactory
 
 func Handler(req APIGatewayProxyRequest) (APIGatewayProxyResponse, error) {
 	var message domain.Message
@@ -24,7 +24,7 @@ func Handler(req APIGatewayProxyRequest) (APIGatewayProxyResponse, error) {
 
 	log.Println(req.Body)
 
-	messageService := messageServiceFactory.Create().(interfaces.MessageService)
+	messageService := messageServiceFactory.Create()
 
 	if err := messageService.Send(message.Text); err != nil {
 		return response.InternalServerError()

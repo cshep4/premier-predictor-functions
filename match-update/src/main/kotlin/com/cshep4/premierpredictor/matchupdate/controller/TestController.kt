@@ -2,6 +2,8 @@ package com.cshep4.premierpredictor.matchupdate.controller
 
 import com.cshep4.premierpredictor.matchupdate.data.LiveMatch
 import com.cshep4.premierpredictor.matchupdate.data.ScoresUpdated
+import com.cshep4.premierpredictor.matchupdate.domain.Response
+import com.cshep4.premierpredictor.matchupdate.domain.State
 import com.cshep4.premierpredictor.matchupdate.service.TestService
 import com.cshep4.premierpredictor.matchupdate.service.UpdateMatchService
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,32 +22,31 @@ class TestController {
     private lateinit var testService: TestService
 
     @GetMapping
-    fun updateMatches() : ResponseEntity<Boolean> {
-        return when (updateMatchService.updateLiveMatches()) {
-            true -> ok().build()
-            false -> status(HttpStatus.INTERNAL_SERVER_ERROR).build()
-        }
+    fun updateMatches(): ResponseEntity<Response> {
+        return ok(Response(
+                next = updateMatchService.updateLiveMatches()
+        ))
     }
 
     @GetMapping("/{id}")
-    fun getTestMatches(@PathVariable(value = "id") id: String) : ResponseEntity<LiveMatch?> {
+    fun getTestMatches(@PathVariable(value = "id") id: String): ResponseEntity<LiveMatch?> {
         return ok().body(testService.getTestMatches(id))
     }
 
     @GetMapping("/all")
-    fun getAllTestMatches() : ResponseEntity<List<LiveMatch>> {
+    fun getAllTestMatches(): ResponseEntity<List<LiveMatch>> {
         return ok().body(testService.getAllTestMatches())
     }
 
     @PostMapping
-    fun addTestMatches(@RequestBody liveMatches: Set<LiveMatch>) : ResponseEntity<Boolean> {
+    fun addTestMatches(@RequestBody liveMatches: Set<LiveMatch>): ResponseEntity<Boolean> {
         testService.addTestMatches(liveMatches)
 
         return ok().build()
     }
 
     @DeleteMapping("/{id}")
-    fun removeTestMatches(@PathVariable(value = "id") id: String) : ResponseEntity<Boolean> {
+    fun removeTestMatches(@PathVariable(value = "id") id: String): ResponseEntity<Boolean> {
         testService.removeTestMatches(id)
 
         return ok().build()

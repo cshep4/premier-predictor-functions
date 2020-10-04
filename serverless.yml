@@ -51,23 +51,61 @@ package:
    - send-email/bin/**
    - send-message/bin/**
 
+stepFunctions:
+  stateMachines:
+    matchUpdate:
+      name: 'matchUpdate'
+      definition:
+        Comment: "Updates currently being played every 10 seconds"
+        StartAt: UPDATE_MATCHES
+        States:
+          UPDATE_MATCHES:
+            Type: Task
+            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-${opt:stage}-match-update"
+            ResultPath: "$.shouldUpdateScores"
+            Next: CHECK_MATCHES_FINISHED
+          CHECK_MATCHES_FINISHED:
+            Type: Choice
+            Choices:
+              - Variable: $.next
+                StringEquals: "UPDATE_USER_SCORES"
+                Next: UPDATE_USER_SCORES
+              - Variable: $.next
+                StringEquals: "WAIT"
+                Next: WAIT
+              - Variable: $.next
+                StringEquals: "END"
+                Next: END
+          WAIT:
+            Type: Wait
+            Seconds: 10
+            Next: UPDATE_MATCHES
+          UPDATE_USER_SCORES:
+            Resource: "arn:aws:lambda:${self:provider.region}:${self:custom.secrets.awsAccountId}:function:${self:service}-${opt:stage}-user-score-updater"
+            End: true
+          END:
+            Type: Succeed
+            End: true
+
 functions:
   match-update:
     runtime: java8
     memorySize: 1592
     timeout: 60
     handler: com.cshep4.premierpredictor.matchupdate.handler.aws.MatchUpdateHandler
+    reservedConcurrency: 1
     environment:
       FUNCTION_NAME: matchUpdate
     package:
       artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
-    events:
-      - schedule: rate(1 minute)
+#    events:
+#      - schedule: rate(1 minute)
   user-score-updater:
     runtime: java8
     memorySize: 1592
     timeout: 60
     handler: com.cshep4.premierpredictor.userscoreupdater.handler.aws.UserScoreUpdaterHandler
+    reservedConcurrency: 1
     environment:
       FUNCTION_NAME: userScoreUpdater
     package:
@@ -92,6 +130,7 @@ functions:
   live-match-check:
     runtime: go1.x
     handler: live-match/bin/live-match-check
+    reservedConcurrency: 1
     events:
       - schedule: rate(5 minutes)
   send-email:

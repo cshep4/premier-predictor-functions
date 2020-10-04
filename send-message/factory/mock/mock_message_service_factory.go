@@ -2,7 +2,8 @@ package mock
 
 import (
 	. "github.com/stretchr/testify/mock"
-	. "github.com/cshep4/premier-predictor-functions/common/service"
+
+	"github.com/cshep4/premier-predictor-functions/send-message/service/interfaces"
 	"github.com/cshep4/premier-predictor-functions/send-message/service/mock"
 )
 
@@ -22,7 +23,7 @@ func MockMessageServiceFactory(input string, result error) MessageServiceFactory
 
 }
 
-func (_m MessageServiceFactory) Create() Service {
+func (_m MessageServiceFactory) Create() interfaces.MessageService {
 	messageService := new(mock.MessageService)
 	messageService.On("Send", _m.input).Return(_m.result)
 

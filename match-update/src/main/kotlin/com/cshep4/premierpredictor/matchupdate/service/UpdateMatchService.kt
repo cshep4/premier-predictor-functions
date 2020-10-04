@@ -8,6 +8,8 @@ import com.cshep4.premierpredictor.matchupdate.component.notify.NotificationDeco
 import com.cshep4.premierpredictor.matchupdate.component.score.ScoresUpdatedReader
 import com.cshep4.premierpredictor.matchupdate.component.score.UserScoreUpdater
 import com.cshep4.premierpredictor.matchupdate.data.Match
+import com.cshep4.premierpredictor.matchupdate.domain.State
+import com.cshep4.premierpredictor.matchupdate.extensions.anyOrEmpty
 import com.cshep4.premierpredictor.matchupdate.extensions.isToday
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNotNullNorEmpty
 import com.cshep4.premierpredictor.matchupdate.extensions.whenNullOrEmpty
@@ -37,41 +39,31 @@ class UpdateMatchService {
     @Autowired
     private lateinit var notificationDecorator: NotificationDecorator
 
-    fun updateLiveMatches(): Boolean {
+    fun updateLiveMatches(): State {
         liveMatchDataHandler.retrieveMatchIds().whenNotNullNorEmpty { liveMatchIds ->
             val updatedMatches = liveMatchIds
                     .mapNotNull { liveMatchUpdater.retrieveLatest(it) }
 
-            updatedMatches.whenNullOrEmpty {
-                return false
+            if (updatedMatches.isEmpty()) {
+                return State.END
             }
 
             matchWriter.matchFacts(updatedMatches)
 
-            updatedMatches.filter { it.status == "FT" }
+            val finishedMatches = updatedMatches.filter { it.status == "FT" }
                     .map { it.toMatch() }
-                    .whenNotNullNorEmpty { processFinishedMatches(it) }
+                    .ifEmpty { return State.WAIT }
+
+            matchWriter.fixtures(finishedMatches)
+            liveMatchDataHandler.remove(finishedMatches.map { it.id })
+
+            if (matchReader.retrieveTodaysMatches().anyOrEmpty { it.hGoals == null && it.aGoals == null }) {
+                return State.WAIT
+            }
+
+            return State.UPDATE_USER_SCORES
         }
 
-        return true
-    }
-
-    private fun processFinishedMatches(matches: Collection<Match>) {
-        matchWriter.fixtures(matches)
-        liveMatchDataHandler.remove(matches.map { it.id })
-
-        System.out.println("haveScoresBeenUpdatedToday: " + scoresUpdatedReader.scoresLastUpdated().isToday())
-
-        if (!scoresUpdatedReader.scoresLastUpdated().isToday()) {
-            matchReader.retrieveTodaysMatches()
-                    .whenNotNullNorEmpty { updateScoresIfMatchesHaveFinished(it) }
-        }
-
-    }
-
-    private fun updateScoresIfMatchesHaveFinished(todaysMatches: Collection<Match>) {
-        System.out.println("updateScoresIfMatchesHaveFinished")
-        todaysMatches.filter { it.hGoals == null && it.aGoals == null }
-                .whenNullOrEmpty { notificationDecorator.send(userScoreUpdater::update) }
+        return State.END
     }
 }

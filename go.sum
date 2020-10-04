@@ -21,10 +21,13 @@ github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004180346-2f34b218ffe7 h1:Fjcv
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004180346-2f34b218ffe7/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004184440-74f66b17ff36 h1:pHqJQLk4TvM2H1hT/uNI1o5+4aBFf7F1z66XdUIj7ds=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004184440-74f66b17ff36/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
+github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004195119-ac6a0d16807b h1:fti1MF1s16xi4TXJ8/gT+2bWr4CmTjR0yv6FlY3xJNQ=
+github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004195119-ac6a0d16807b/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
 github.com/cshep4/lambda-go/lambda v0.0.0-20200914172909-ab09e866ccb7 h1:Dh9htdnRwbhlg+srjy5mRT+iyRIfxwz0ahxRn14admw=
 github.com/cshep4/lambda-go/lambda v0.0.0-20200914172909-ab09e866ccb7/go.mod h1:nK6ETBAKivpAqR37Wj46Yiw4Zy2/jwY+HHbfl84ET+8=
 github.com/cshep4/lambda-go/lambda v0.0.0-20201004180346-2f34b218ffe7 h1:4ZOa8gUBPV0gBIRY0E7vNTBtOeiVPZzAD3m4iWakexE=
 github.com/cshep4/lambda-go/lambda v0.0.0-20201004184440-74f66b17ff36 h1:M2WqguzTjgnutFFv6BN7odgvQ8VMfKbs1H8pncxDGhk=
+github.com/cshep4/lambda-go/lambda v0.0.0-20201004195119-ac6a0d16807b h1:OyrI6GiYPJmIzuRUEabTOdgjBnfA3yW6dV2vBBEH2XM=
 github.com/cshep4/lambda-go/log v0.0.0-20200913164254-f85d62ce697f h1:HZo3qpqsdiEuLH95lGYCThlSp5QnjevX+Zpt9UVYP8Q=
 github.com/cshep4/lambda-go/log v0.0.0-20200913164254-f85d62ce697f/go.mod h1:pww+VxxkP0+2HT9V22SUUh1Ws4R1oRjE964PwXh0Mow=
 github.com/cshep4/lambda-go/log v0.0.0-20200914172909-ab09e866ccb7 h1:28oRYs/AqjXF9pVq2GV8VD82L/yobPF7DrtX9gJVJhs=

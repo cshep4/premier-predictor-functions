@@ -2,9 +2,21 @@ service: premier-predictor
 
 custom:
   secrets: ${file(secrets.json)}
+  apigwBinary:
+    types:
+      - '*/*'
+    # customDomain:
+    #   domainName: ${self:custom.secrets.DOMAIN}
+    #   basePath: ''
+    #   createRoute53Record: true
+    ## endpointType: 'regional'
+    ## if the ACM certificate is created in a region except for `'us-east-1'` you need `endpointType: 'regional'`
 
 plugins:
   - serverless-step-functions
+  - serverless-apigw-binary
+  # - serverless-domain-manager
+  - serverless-offline
 
 provider:
   name: aws
@@ -100,6 +112,11 @@ stepFunctions:
             Type: Fail
 
 functions:
+  dashboard:
+    handler: dashboard/index.nuxt
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}
   match-update:
     runtime: java8
     memorySize: 1592
@@ -110,8 +127,6 @@ functions:
       FUNCTION_NAME: matchUpdate
     package:
       artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
-#    events:
-#      - schedule: rate(1 minute)
   user-score-updater:
     runtime: java8
     memorySize: 1592

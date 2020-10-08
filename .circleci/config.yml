@@ -164,11 +164,21 @@ workflows:
               only:
                 - master
       - build:
+          name: build-dashboard
+          docker_image: circleci/node:latest
+          service_path: dashboard
+          requires:
+            - checkout-code
+          filters:
+            branches:
+              only:
+                - master
+      - build:
           name: build-live-match
           docker_image: cimg/go:1.15
           service_path: live-match
           requires:
-            - checkout-code
+            - build-dashboard
           filters:
             branches:
               only:

@@ -2,8 +2,12 @@
   "name": "premier-predictor",
   "description": "",
   "version": "0.1.0",
-  "dependencies": {},
+  "dependencies": {
+    "serverless-apigw-binary": "^0.4.4",
+    "serverless-http": "^2.0.1"
+  },
   "devDependencies": {
-    "serverless-step-functions": "^2.26.0"
+    "serverless-step-functions": "^2.26.0",
+    "serverless-offline": "^4.10.0"
   }
 }

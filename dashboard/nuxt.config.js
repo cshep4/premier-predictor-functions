@@ -19,6 +19,7 @@ module.exports = {
   http: {
     baseURL: 'https://api.thedogapi.com/v1/',
   },
+  telemetry: false,
 
   render: {
     compressor: false,

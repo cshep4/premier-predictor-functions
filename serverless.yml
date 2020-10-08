@@ -16,7 +16,6 @@ plugins:
   - serverless-step-functions
   - serverless-apigw-binary
   # - serverless-domain-manager
-  - serverless-offline
 
 provider:
   name: aws

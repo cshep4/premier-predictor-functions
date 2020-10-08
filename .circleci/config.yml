@@ -168,7 +168,7 @@ workflows:
           docker_image: circleci/node:latest
           service_path: dashboard
           requires:
-            - checkout-code
+            - go-vendor
           filters:
             branches:
               only:

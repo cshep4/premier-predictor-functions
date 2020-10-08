@@ -7,7 +7,6 @@
     "serverless-http": "^2.0.1"
   },
   "devDependencies": {
-    "serverless-step-functions": "^2.26.0",
-    "serverless-offline": "^4.10.0"
+    "serverless-step-functions": "^2.26.0"
   }
 }

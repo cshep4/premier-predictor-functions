@@ -98,12 +98,14 @@ stepFunctions:
 
 functions:
   dashboard:
+    runtime: nodejs12.x
     handler: dashboard/index.nuxt
-    include:
-      - dashboard/**
+    package:
+      include:
+        - dashboard/**
     events:
-      - http: ANY /
-      - http: ANY /{proxy+}
+      - http: ANY dashboard
+      - http: ANY dashboard/{proxy+}
   match-update:
     runtime: java8
     memorySize: 1592
@@ -112,8 +114,6 @@ functions:
     reservedConcurrency: 1
     environment:
       FUNCTION_NAME: matchUpdate
-    include:
-      - match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
     package:
       artifact: match-update/build/libs/match-update-0.0.1-SNAPSHOT-aws.jar
   user-score-updater:
@@ -124,8 +124,6 @@ functions:
     reservedConcurrency: 1
     environment:
       FUNCTION_NAME: userScoreUpdater
-    include:
-      - user-score-updater/build/libs/user-score-updater-0.0.1-SNAPSHOT-aws.jar
     package:
       artifact: user-score-updater/build/libs/user-score-updater-0.0.1-SNAPSHOT-aws.jar
     events:
@@ -141,8 +139,6 @@ functions:
     handler: com.cshep4.premierpredictor.matchdatarefresh.handler.aws.MatchDataRefreshHandler
     environment:
       FUNCTION_NAME: matchDataRefresh
-    include:
-      - match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
     package:
       artifact: match-data-refresh/build/libs/match-data-refresh-0.0.1-SNAPSHOT-aws.jar
     events:
@@ -155,16 +151,18 @@ functions:
       STATE_MACHINE_ARN: "arn:aws:states:${self:provider.region}:${self:custom.secrets.awsAccountId}:stateMachine:matchUpdate"
     events:
       - schedule: rate(5 minutes)
-    include:
-      - live-match/bin/live-match-check
+    package:
+      include:
+        - live-match/bin/live-match-check
   send-email:
     runtime: go1.x
     handler: send-email/bin/sqs/main
     reservedConcurrency: 10
     events:
       - sqs: arn:aws:sqs:us-east-1:925427442847:SendEmail
-    include:
-      - send-email/bin/sqs/main
+    package:
+      include:
+        - send-email/bin/sqs/main
   send-email-http:
     runtime: go1.x
     handler: send-email/bin/http/main
@@ -174,8 +172,9 @@ functions:
           resp: http
           method: post
           cors: true
-    include:
-      - send-email/bin/http/main
+    package:
+      include:
+        - send-email/bin/http/main
   get-live-matches:
     runtime: go1.x
     handler: live-match/bin/get-live-matches
@@ -185,8 +184,9 @@ functions:
           resp: http
           method: get
           cors: true
-    include:
-      - live-match/bin/get-live-matches
+    package:
+      include:
+        - live-match/bin/get-live-matches
   messenger:
     runtime: nodejs12.x
     handler: messenger/handler.messenger
@@ -205,8 +205,9 @@ functions:
           method: get
           cors: true
           integration: lambda
-    include:
-      - messenger/**
+    package:
+      include:
+        - messenger/**
   send-message:
     runtime: go1.x
     handler: send-message/bin/main
@@ -219,5 +220,6 @@ functions:
           resp: http
           method: post
           cors: true
-    include:
-      - send-message/bin/**
+    package:
+      include:
+        - send-message/bin/**

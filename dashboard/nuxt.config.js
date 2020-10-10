@@ -10,7 +10,8 @@ module.exports = {
     ],
   },
 
-  srcDir: 'client/',
+  srcDir: 'dashboard/client/',
+  rootDir: 'dashboard/',
 
   modules: [
     '@nuxt/http',

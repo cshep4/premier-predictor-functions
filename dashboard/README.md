@@ -45,11 +45,11 @@ To accomplish this we need to spin up a simple Express server and configure the 
     Output:
     ```bash
 
-    > aws-node-vue-nuxt-ssr@1.0.0 deploy /home/raha/code/serverless/examples/aws-node-vue-nuxt-ssr
+    > premier-predictor-dashboard@1.0.0 deploy /home/raha/code/serverless/examples/premier-predictor-dashboard
     > npm run build && sls deploy
 
 
-    > aws-node-vue-nuxt-ssr@1.0.0 build /home/raha/code/serverless/examples/aws-node-vue-nuxt-ssr
+    > premier-predictor-dashboard@1.0.0 build /home/raha/code/serverless/examples/premier-predictor-dashboard
     > nuxt build
 
     Hash: 969f557230f1916aaab2

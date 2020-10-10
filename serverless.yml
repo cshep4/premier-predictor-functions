@@ -15,6 +15,7 @@ custom:
 plugins:
   - serverless-step-functions
   - serverless-apigw-binary
+  - serverless-offline
   # - serverless-domain-manager
 
 provider:

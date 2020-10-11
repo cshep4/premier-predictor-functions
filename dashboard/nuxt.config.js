@@ -1,5 +1,5 @@
 module.exports = {
-  mode: 'universal',
+  // mode: 'universal',
 
   head: {
     title: 'Vue Nuxt Test',
@@ -11,11 +11,11 @@ module.exports = {
   },
 
   srcDir: 'client/',
-  rootDir: 'dashboard/',
+  // rootDir: '/',
 
-  router: {
-    base: '/dashboard/'
-  },
+  // router: {
+  //   base: '/dashboard/'
+  // },
 
   modules: [
     '@nuxt/http',

@@ -100,6 +100,9 @@ jobs:
   deploy:
     docker:
       - image: circleci/node:latest
+    parameters:
+      service_path:
+        type: string
     steps:
       - attach_workspace:
           at: .
@@ -107,6 +110,7 @@ jobs:
       - run:
           name: Create secrets file
           command: |
+            cd << parameters.service_path >>
             JSON='{
               "dynamoDbEndpoint": "%s",
               "dynamoDbAccessKey": "%s",
@@ -143,6 +147,7 @@ jobs:
       - run:
           name: Install Serverless CLI, Configure Profile, Deploy
           command: |
+            cd << parameters.service_path >>
             sudo npm i -g serverless
             npm install
             serverless config credentials --provider aws --key ${AWS_ACCESS_KEY} --secret ${AWS_SECRET_KEY} --profile personal
@@ -173,12 +178,21 @@ workflows:
             branches:
               only:
                 - master
+      - deploy:
+          name: deploy-dashboard
+          service_path: dashboard
+          requires:
+            - build-dashboard
+          filters:
+            branches:
+              only:
+                - master
       - build:
           name: build-live-match
           docker_image: cimg/go:1.15
           service_path: live-match
           requires:
-            - build-dashboard
+            - deploy-dashboard
           filters:
             branches:
               only:
@@ -234,6 +248,7 @@ workflows:
               only:
                 - master
       - deploy:
+          service_path: common/..
           requires:
             - build-user-score-updater
           filters:

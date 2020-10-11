@@ -5,18 +5,9 @@ custom:
   apigwBinary:
     types:
       - '*/*'
-    # customDomain:
-    #   domainName: ${self:custom.secrets.DOMAIN}
-    #   basePath: ''
-    #   createRoute53Record: true
-    ## endpointType: 'regional'
-    ## if the ACM certificate is created in a region except for `'us-east-1'` you need `endpointType: 'regional'`
 
 plugins:
   - serverless-step-functions
-  - serverless-apigw-binary
-  - serverless-offline
-  # - serverless-domain-manager
 
 provider:
   name: aws
@@ -98,15 +89,6 @@ stepFunctions:
             Type: Fail
 
 functions:
-  dashboard:
-    runtime: nodejs12.x
-    handler: dashboard/index.nuxt
-    package:
-      include:
-        - dashboard/**
-    events:
-      - http: ANY dashboard
-      - http: ANY dashboard/{proxy+}
   match-update:
     runtime: java8
     memorySize: 1592

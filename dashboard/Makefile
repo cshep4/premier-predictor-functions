@@ -2,5 +2,5 @@
 default: build
 
 build:
-	cd .. && sudo npm install
-	cd .. && sudo npm run build
+	sudo npm install
+	sudo npm run build

@@ -13,9 +13,9 @@ module.exports = {
   srcDir: 'client/',
   rootDir: 'dashboard/',
 
-  // router: {
-  //   base: '/dev/dashboard/'
-  // },
+  router: {
+    base: '/dashboard/'
+  },
 
   modules: [
     '@nuxt/http',

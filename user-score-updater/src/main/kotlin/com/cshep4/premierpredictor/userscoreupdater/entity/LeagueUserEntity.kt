@@ -1,10 +1,12 @@
 package com.cshep4.premierpredictor.userscoreupdater.entity
 
 import com.cshep4.premierpredictor.userscoreupdater.data.LeagueUser
+import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.types.ObjectId
 import org.bson.types.ObjectId.isValid
 
 data class LeagueUserEntity(
+        @BsonProperty("_id")
         var id: ObjectId,
         val rank: Int,
         val name: String,

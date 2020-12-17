@@ -110,7 +110,9 @@ jobs:
       - run:
           name: Create secrets file
           command: |
-            cd << parameters.service_path >>
+            if [[ << parameters.service_path >> != "" ]]; then
+              cd << parameters.service_path >>
+            fi
             JSON='{
               "dynamoDbEndpoint": "%s",
               "dynamoDbAccessKey": "%s",

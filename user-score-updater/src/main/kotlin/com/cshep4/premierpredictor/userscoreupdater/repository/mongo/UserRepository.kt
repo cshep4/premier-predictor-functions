@@ -3,6 +3,7 @@ package com.cshep4.premierpredictor.userscoreupdater.repository.mongo
 import com.cshep4.premierpredictor.userscoreupdater.config.MongoConfig.Companion.ID
 import com.cshep4.premierpredictor.userscoreupdater.data.User
 import com.cshep4.premierpredictor.userscoreupdater.entity.UserEntity
+import com.cshep4.premierpredictor.userscoreupdater.extensions.toObjectId
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
@@ -10,7 +11,6 @@ import com.mongodb.client.model.Filters
 import com.mongodb.client.model.UpdateOneModel
 import com.mongodb.client.model.UpdateOptions
 import org.bson.Document
-import org.bson.types.ObjectId
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
 
@@ -46,7 +46,7 @@ class UserRepository {
 
         val entities = users.map {
             UpdateOneModel<UserEntity>(
-                    Filters.eq(ID, ObjectId(it.id)),
+                    Filters.eq(ID, it.id!!.toObjectId()),
                     Document(
                             mapOf(
                                     Pair("\$set", UserEntity.fromDto(it))

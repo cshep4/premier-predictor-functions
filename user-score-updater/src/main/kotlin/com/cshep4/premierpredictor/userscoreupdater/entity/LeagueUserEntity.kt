@@ -1,9 +1,9 @@
 package com.cshep4.premierpredictor.userscoreupdater.entity
 
 import com.cshep4.premierpredictor.userscoreupdater.data.LeagueUser
+import com.cshep4.premierpredictor.userscoreupdater.extensions.toObjectId
 import org.bson.codecs.pojo.annotations.BsonProperty
 import org.bson.types.ObjectId
-import org.bson.types.ObjectId.isValid
 
 data class LeagueUserEntity(
         @BsonProperty("_id")
@@ -23,18 +23,12 @@ data class LeagueUserEntity(
     )
 
     companion object {
-        fun fromDto(dto: LeagueUser): LeagueUserEntity {
-            if (!isValid(dto.id)) {
-                throw IllegalArgumentException("Invalid id")
-            }
-
-            return LeagueUserEntity(
-                    id = ObjectId(dto.id),
-                    rank = dto.rank,
-                    name = dto.name,
-                    predictedWinner = dto.predictedWinner,
-                    score = dto.score
-            )
-        }
+        fun fromDto(dto: LeagueUser): LeagueUserEntity = LeagueUserEntity(
+                id = dto.id.toObjectId(),
+                rank = dto.rank,
+                name = dto.name,
+                predictedWinner = dto.predictedWinner,
+                score = dto.score
+        )
     }
 }

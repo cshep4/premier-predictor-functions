@@ -1,13 +1,13 @@
 package com.cshep4.premierpredictor.userscoreupdater.entity
 
 import com.cshep4.premierpredictor.userscoreupdater.data.User
+import com.cshep4.premierpredictor.userscoreupdater.extensions.toObjectId
 import org.bson.types.ObjectId
-import org.bson.types.ObjectId.isValid
 import java.time.LocalDateTime
 
-data class UserEntity (
+data class UserEntity(
         var id: ObjectId = ObjectId(),
-        var firstName: String= "",
+        var firstName: String = "",
         var surname: String = "",
         var email: String? = null,
         var password: String? = null,
@@ -16,7 +16,7 @@ data class UserEntity (
         var joined: LocalDateTime? = null,
         var admin: Boolean = false,
         var adFree: Boolean = false
-){
+) {
 
     fun toDto(): User = User(
             id = this.id.toHexString(),
@@ -31,22 +31,16 @@ data class UserEntity (
             adFree = this.adFree)
 
     companion object {
-        fun fromDto(dto: User): UserEntity {
-            if (!isValid(dto.id)) {
-                throw IllegalArgumentException("Invalid id")
-            }
-
-            return UserEntity(
-                    id = ObjectId(dto.id),
-                    firstName = dto.firstName,
-                    surname = dto.surname,
-                    email = dto.email,
-                    password = dto.password,
-                    predictedWinner = dto.predictedWinner,
-                    score = dto.score,
-                    joined = dto.joined,
-                    admin = dto.admin,
-                    adFree = dto.adFree)
-        }
+        fun fromDto(dto: User): UserEntity = UserEntity(
+                id = dto.id!!.toObjectId(),
+                firstName = dto.firstName,
+                surname = dto.surname,
+                email = dto.email,
+                password = dto.password,
+                predictedWinner = dto.predictedWinner,
+                score = dto.score,
+                joined = dto.joined,
+                admin = dto.admin,
+                adFree = dto.adFree)
     }
 }

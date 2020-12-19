@@ -3,6 +3,7 @@ package com.cshep4.premierpredictor.userscoreupdater.repository.mongo
 import com.cshep4.premierpredictor.userscoreupdater.config.MongoConfig.Companion.ID
 import com.cshep4.premierpredictor.userscoreupdater.data.LeagueUser
 import com.cshep4.premierpredictor.userscoreupdater.entity.LeagueUserEntity
+import com.cshep4.premierpredictor.userscoreupdater.extensions.toObjectId
 import com.mongodb.client.MongoClient
 import com.mongodb.client.MongoCollection
 import com.mongodb.client.MongoDatabase
@@ -37,7 +38,7 @@ class LeagueRepository {
 
         val entities = users.map {
             UpdateOneModel<LeagueUserEntity>(
-                    eq(ID, it.id),
+                    eq(ID, it.id.toObjectId()),
                     Document(
                             mapOf(
                                     Pair("\$set", LeagueUserEntity.fromDto(it))

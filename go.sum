@@ -17,12 +17,15 @@ github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDk
 github.com/cpuguy83/go-md2man/v2 v2.0.0-20190314233015-f79a8a8ca69d/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsrgA7czyZG/E6dU=
 github.com/cshep4/lambda-go v0.0.0-20201004180346-2f34b218ffe7 h1:an+Se4WIjkOfAmgYo3KZke9ysg7RxtcnCjCECQJfyZY=
+github.com/cshep4/lambda-go v0.0.0-20201004195119-ac6a0d16807b h1:i3B+ZPye6p68q8mSedQUZvHw9C6Lbg4Is1VfTYA7XA8=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004180346-2f34b218ffe7 h1:FjcvapCQi2zJmudbYbpB0yYIgrFFy2OtdNNs4bEqsR0=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004180346-2f34b218ffe7/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004184440-74f66b17ff36 h1:pHqJQLk4TvM2H1hT/uNI1o5+4aBFf7F1z66XdUIj7ds=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004184440-74f66b17ff36/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004195119-ac6a0d16807b h1:fti1MF1s16xi4TXJ8/gT+2bWr4CmTjR0yv6FlY3xJNQ=
 github.com/cshep4/lambda-go/heartbeat v0.0.0-20201004195119-ac6a0d16807b/go.mod h1:QPO/vnSBcKNiUozd2f2seWtNW1/oHheUdFIQJ/s+WtY=
+github.com/cshep4/lambda-go/idempotency v0.0.0-20201004195119-ac6a0d16807b h1:4kwu/oXa9JMSaZHU+GH46JGnI5fW9Jn7acuDc65kfWY=
+github.com/cshep4/lambda-go/idempotency v0.0.0-20201004195119-ac6a0d16807b/go.mod h1:y3ce3K4ZZMTS4w0bM66EgjLJCZ62pXcd/HZvOuELYjM=
 github.com/cshep4/lambda-go/lambda v0.0.0-20200914172909-ab09e866ccb7 h1:Dh9htdnRwbhlg+srjy5mRT+iyRIfxwz0ahxRn14admw=
 github.com/cshep4/lambda-go/lambda v0.0.0-20200914172909-ab09e866ccb7/go.mod h1:nK6ETBAKivpAqR37Wj46Yiw4Zy2/jwY+HHbfl84ET+8=
 github.com/cshep4/lambda-go/lambda v0.0.0-20201004180346-2f34b218ffe7 h1:4ZOa8gUBPV0gBIRY0E7vNTBtOeiVPZzAD3m4iWakexE=
@@ -34,6 +37,8 @@ github.com/cshep4/lambda-go/log v0.0.0-20200914172909-ab09e866ccb7 h1:28oRYs/Aqj
 github.com/cshep4/lambda-go/log v0.0.0-20200914172909-ab09e866ccb7/go.mod h1:pww+VxxkP0+2HT9V22SUUh1Ws4R1oRjE964PwXh0Mow=
 github.com/cshep4/lambda-go/mongodb v0.0.0-20201004180346-2f34b218ffe7 h1:gSNJLsYO1U2PB0Khb/I5ACkqc5h2I9k4ufnP+6EEtyo=
 github.com/cshep4/lambda-go/mongodb v0.0.0-20201004180346-2f34b218ffe7/go.mod h1:uTXvs4I6QJ6JCcVEE73u74RaFLp1/p2oYwWc1F+0mas=
+github.com/cshep4/lambda-go/mongodb v0.0.0-20201004195119-ac6a0d16807b h1:D9Aaeao6WEcxk8NHLp3sfizWIZGt5UKpLH6x+taET7E=
+github.com/cshep4/lambda-go/mongodb v0.0.0-20201004195119-ac6a0d16807b/go.mod h1:uTXvs4I6QJ6JCcVEE73u74RaFLp1/p2oYwWc1F+0mas=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -199,6 +204,8 @@ github.com/xdg/stringprep v0.0.0-20180714160509-73f8eece6fdc h1:n+nNi93yXLkJvKwX
 github.com/xdg/stringprep v0.0.0-20180714160509-73f8eece6fdc/go.mod h1:Jhud4/sHMO4oL310DaZAKk9ZaJ08SJfe+sJh0HrGL1Y=
 go.mongodb.org/mongo-driver v1.3.1 h1:op56IfTQiaY2679w922KVWa3qcHdml2K/Io8ayAOUEQ=
 go.mongodb.org/mongo-driver v1.3.1/go.mod h1:MSWZXKOynuguX+JSvwP8i+58jYCXxbia8HS3gZBapIE=
+go.mongodb.org/mongo-driver v1.3.3 h1:9kX7WY6sU/5qBuhm5mdnNWdqaDAQKB2qSZOd5wMEPGQ=
+go.mongodb.org/mongo-driver v1.3.3/go.mod h1:MSWZXKOynuguX+JSvwP8i+58jYCXxbia8HS3gZBapIE=
 go.mongodb.org/mongo-driver v1.4.1 h1:38NSAyDPagwnFpUA/D5SFgbugUYR3NzYRNa4Qk9UxKs=
 go.mongodb.org/mongo-driver v1.4.1/go.mod h1:llVBH2pkj9HywK0Dtdt6lDikOjFLbceHVu/Rc0iMKLs=
 go.uber.org/atomic v1.5.0/go.mod h1:sABNBOSYdrvTF6hTgEIbc7YasKWGhgEQZyfxyTvoXHQ=

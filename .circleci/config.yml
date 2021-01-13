@@ -200,11 +200,21 @@ workflows:
               only:
                 - master
       - build:
+          name: build-league-user
+          docker_image: cimg/go:1.15
+          service_path: league-user
+          requires:
+            - deploy-live-match
+          filters:
+            branches:
+              only:
+                - master
+      - build:
           name: build-send-email
           docker_image: cimg/go:1.15
           service_path: send-email
           requires:
-            - build-live-match
+            - build-league-user
           filters:
             branches:
               only:

@@ -45,6 +45,9 @@ provider:
     MONGO_URI: ${self:custom.secrets.mongoUri}
     REGION: ${self:provider.region}
 
+resources:
+  - ${file(serverless/resources.yml)}
+
 package:
   individually: true
   exclude:
@@ -142,10 +145,19 @@ functions:
     handler: send-email/bin/sqs/main
     reservedConcurrency: 10
     events:
-      - sqs: arn:aws:sqs:us-east-1:925427442847:SendEmail
+      - sqs: arn:aws:sqs:${self:provider.region}:${self:custom.secrets.awsAccountId}:SendEmail
     package:
       include:
         - send-email/bin/sqs/main
+  create-league-user:
+    runtime: go1.x
+    handler: league-user/bin/create-league-user
+    reservedConcurrency: 10
+    events:
+      - sqs: arn:aws:sqs:${self:provider.region}:${self:custom.secrets.awsAccountId}:CreateLeagueUser
+    package:
+      include:
+        - league-user/bin/create-league-user
   send-email-http:
     runtime: go1.x
     handler: send-email/bin/http/main

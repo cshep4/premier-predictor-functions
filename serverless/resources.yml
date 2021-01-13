@@ -1,0 +1,53 @@
+Resources:
+  ######################
+  # USER CREATED EVENT #
+  ######################
+  # Create our SNS Topic
+  userCreatedTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "UserCreated"
+  # Create our 'createLeagueUserQueue' SQS queue
+  createLeagueUserQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "CreateLeagueUser"
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt
+          - createLeagueUserQueueDLQ
+          - Arn
+        maxReceiveCount: 3
+  # Create our 'createLeagueUserQueue' Dead Letter Queue SQS queue
+  createLeagueUserQueueDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "CreateLeagueUserDLQ"
+  # Create our queue policy for the 'createLeagueUserQueue'
+  snsToCreateLeagueUserQueueSqsPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "allow-sns-messages"
+            Effect: Allow
+            Principal: "*"
+            Resource: !GetAtt
+              - createLeagueUserQueue
+              - Arn
+            Action: "SQS:SendMessage"
+            Condition:
+              ArnEquals:
+                "aws:SourceArn": !Ref userCreatedTopic
+      Queues:
+        - Ref: createLeagueUserQueue
+  # Create the subscription to the 'createLeagueUserQueue'
+  createLeagueUserQueueSubscription:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      TopicArn: !Ref userCreatedTopic
+      Endpoint: !GetAtt
+        - createLeagueUserQueue
+        - Arn
+      Protocol: sqs
+      RawMessageDelivery: 'true'

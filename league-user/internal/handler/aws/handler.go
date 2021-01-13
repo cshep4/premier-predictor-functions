@@ -15,6 +15,7 @@ import (
 type (
 	Service interface {
 		CreateLeagueUser(ctx context.Context, user league.User) error
+		UpdateLeagueUser(ctx context.Context, user league.User) error
 	}
 
 	Handler struct {
@@ -46,6 +47,35 @@ func (h *Handler) CreateLeagueUser(ctx context.Context, sqsEvent events.SQSEvent
 		}
 
 		log.Info(ctx, "league_user_created", log.SafeParam("user_id", user.ID))
+	}
+
+	return nil
+}
+
+func (h *Handler) UpdateLeagueUser(ctx context.Context, sqsEvent events.SQSEvent) error {
+	if len(sqsEvent.Records) == 0 {
+		return errors.New("no sqs message passed to function")
+	}
+
+	for _, msg := range sqsEvent.Records {
+		var user league.User
+		err := json.Unmarshal([]byte(msg.Body), &user)
+		if err != nil {
+			log.Error(ctx, "invalid_msg_body", log.ErrorParam(err))
+			continue
+		}
+
+		err = h.Service.UpdateLeagueUser(ctx, user)
+		if err != nil {
+			log.Error(ctx, "err_updating_league_user",
+				log.SafeParam("user_id", user.ID),
+				log.ErrorParam(err),
+			)
+
+			return fmt.Errorf("update_league_user: %w", err)
+		}
+
+		log.Info(ctx, "league_user_updated", log.SafeParam("user_id", user.ID))
 	}
 
 	return nil

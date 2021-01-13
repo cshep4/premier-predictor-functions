@@ -46,7 +46,7 @@ provider:
     REGION: ${self:provider.region}
 
 resources:
-  - ${file(serverless/resources.yml)}
+  - ${file(serverless/league-user.yml)}
 
 package:
   individually: true
@@ -158,6 +158,15 @@ functions:
     package:
       include:
         - league-user/bin/create-league-user
+  update-league-user:
+    runtime: go1.x
+    handler: league-user/bin/update-league-user
+    reservedConcurrency: 10
+    events:
+      - sqs: arn:aws:sqs:${self:provider.region}:${self:custom.secrets.awsAccountId}:UpdateLeagueUser
+    package:
+      include:
+        - league-user/bin/update-league-user
   send-email-http:
     runtime: go1.x
     handler: send-email/bin/http/main

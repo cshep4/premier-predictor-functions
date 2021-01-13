@@ -51,3 +51,55 @@ Resources:
         - Arn
       Protocol: sqs
       RawMessageDelivery: 'true'
+  ######################
+  # USER UPDATED EVENT #
+  ######################
+  # Create our SNS Topic
+  userUpdatedTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: "UserUpdated"
+  # Create our 'updateLeagueUserQueue' SQS queue
+  updateLeagueUserQueue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "UpdateLeagueUser"
+      RedrivePolicy:
+        deadLetterTargetArn: !GetAtt
+          - updateLeagueUserQueueDLQ
+          - Arn
+        maxReceiveCount: 3
+  # Create our 'updateLeagueUserQueue' Dead Letter Queue SQS queue
+  updateLeagueUserQueueDLQ:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "UpdateLeagueUserDLQ"
+  # Create our queue policy for the 'updateLeagueUserQueue'
+  snsToUpdateLeagueUserQueueSqsPolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: "allow-sns-messages"
+            Effect: Allow
+            Principal: "*"
+            Resource: !GetAtt
+              - updateLeagueUserQueue
+              - Arn
+            Action: "SQS:SendMessage"
+            Condition:
+              ArnEquals:
+                "aws:SourceArn": !Ref userUpdatedTopic
+      Queues:
+        - Ref: updateLeagueUserQueue
+  # Create the subscription to the 'updateLeagueUserQueue'
+  updateLeagueUserQueueSubscription:
+    Type: 'AWS::SNS::Subscription'
+    Properties:
+      TopicArn: !Ref userUpdatedTopic
+      Endpoint: !GetAtt
+        - updateLeagueUserQueue
+        - Arn
+      Protocol: sqs
+      RawMessageDelivery: 'true'

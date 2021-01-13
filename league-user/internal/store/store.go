@@ -150,6 +150,26 @@ func (s *store) Store(ctx context.Context, user league.User, rank uint64) error 
 	return nil
 }
 
+func (s *store) Update(ctx context.Context, user league.User) error {
+	id, err := primitive.ObjectIDFromHex(user.ID)
+	if err != nil {
+		return fmt.Errorf("object_id_from_hex: %w", err)
+	}
+
+	_, err = s.collection.UpdateOne(ctx, bson.D{{Key: "_id", Value: id}}, bson.D{{
+		Key: "$set",
+		Value: bson.D{{
+			Key:   "name",
+			Value: fmt.Sprintf("%s %s", user.FirstName, user.Surname),
+		}},
+	}})
+	if err != nil {
+		return fmt.Errorf("update_one: %w", err)
+	}
+
+	return nil
+}
+
 func (s *store) ping(ctx context.Context) error {
 	ctx, _ = context.WithTimeout(ctx, 2*time.Second)
 	return s.client.Ping(ctx, nil)

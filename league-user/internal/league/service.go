@@ -10,13 +10,13 @@ type (
 		ID              string `json:"id"`
 		FirstName       string `json:"firstName"`
 		Surname         string `json:"surname"`
-		Email           string `json:"email"`
 		PredictedWinner string `json:"predictedWinner"`
 	}
 
 	Store interface {
 		GetLastPlace(ctx context.Context) (uint64, error)
 		Store(ctx context.Context, user User, rank uint64) error
+		Update(ctx context.Context, user User) error
 	}
 
 	service struct {
@@ -53,6 +53,15 @@ func (s *service) CreateLeagueUser(ctx context.Context, user User) error {
 	err = s.store.Store(ctx, user, rank)
 	if err != nil {
 		return fmt.Errorf("store_league_user: %w", err)
+	}
+
+	return nil
+}
+
+func (s *service) UpdateLeagueUser(ctx context.Context, user User) error {
+	err := s.store.Update(ctx, user)
+	if err != nil {
+		return fmt.Errorf("update_league_user: %w", err)
 	}
 
 	return nil

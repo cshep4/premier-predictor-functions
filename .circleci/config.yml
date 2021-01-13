@@ -204,7 +204,7 @@ workflows:
           docker_image: cimg/go:1.15
           service_path: league-user
           requires:
-            - deploy-live-match
+            - build-live-match
           filters:
             branches:
               only:
